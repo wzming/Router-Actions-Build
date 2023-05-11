@@ -43,3 +43,5 @@ git clone https://github.com/sbwml/openwrt-qBittorrent package/qBittorrent
 git clone https://github.com/jerrykuku/luci-theme-argon.git package/luci-theme-argon
 #pushbot
 git clone https://github.com/zzsj0928/luci-app-pushbot package/luci-app-pushbot
+#alist
+git clone https://github.com/sbwml/luci-app-alist package/alist
