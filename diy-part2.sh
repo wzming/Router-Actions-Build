@@ -20,7 +20,7 @@ cd OpenClash
 cp -r luci-app-openclash /workdir/openwrt/package/
 #mosdns
 cd /workdir/openwrt
-git clone https://github.com/sbwml/luci-app-mosdns -b v5 package/mosdns
+git clone --depth 1 https://github.com/sbwml/luci-app-mosdns -b v5 package/mosdns
 #aliyundrive-webdav
 cd /workdir
 git clone --depth 1 https://github.com/messense/aliyundrive-webdav.git
@@ -35,13 +35,13 @@ cp -r luci-app-arpbind /workdir/openwrt/package/
 cp -r luci-app-autoreboot /workdir/openwrt/package/
 #vlmcsd
 cd /workdir/openwrt
-git clone https://github.com/siwind/openwrt-vlmcsd package/vlmcsd
-git clone https://github.com/siwind/luci-app-vlmcsd.git package/luci-app-vlmcsd
+git clone --depth 1 https://github.com/siwind/openwrt-vlmcsd package/vlmcsd
+git clone --depth 1 https://github.com/siwind/luci-app-vlmcsd.git package/luci-app-vlmcsd
 #qbittorrent
-git clone https://github.com/sbwml/openwrt-qBittorrent package/qBittorrent
+git clone --depth 1 https://github.com/sbwml/openwrt-qBittorrent package/qBittorrent
 #argon
-git clone https://github.com/jerrykuku/luci-theme-argon.git package/luci-theme-argon
+git clone --depth 1 https://github.com/jerrykuku/luci-theme-argon.git package/luci-theme-argon
 #pushbot
-git clone https://github.com/zzsj0928/luci-app-pushbot package/luci-app-pushbot
+git clone --depth 1 https://github.com/zzsj0928/luci-app-pushbot package/luci-app-pushbot
 #alist
-git clone https://github.com/sbwml/luci-app-alist package/alist
+git clone --depth 1 https://github.com/sbwml/luci-app-alist package/alist

@@ -74,6 +74,8 @@ jobs:
         chmod +x $DIY_P2_SH
         cd openwrt
         $GITHUB_WORKSPACE/$DIY_P2_SH
+        ls package/
+        df -hT $PWD
 
     - name: Download package
       id: package
