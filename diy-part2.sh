@@ -23,6 +23,13 @@ cd /workdir
 git clone --depth 1 https://github.com/messense/aliyundrive-webdav.git
 cd aliyundrive-webdav/
 cp -r openwrt /workdir/openwrt/package/aliyundrive-webdav
+#luci-app-zerotier
+cd /workdir
+git clone --depth 1 https://github.com/immortalwrt/luci.git immortalwrt-luci
+cd immortalwrt-luci/applications/
+cp -r luci-app-zerotier /workdir/openwrt/package/
+sed -i 's/include ..\/..\/luci.mk/include $(TOPDIR)\/feeds\/luci\/luci.mk/g' /workdir/openwrt/package/luci-app-zerotier/Makefile
+
 #mosdns
 cd /workdir/openwrt
 git clone --depth 1 https://github.com/sbwml/luci-app-mosdns -b v5 package/mosdns
