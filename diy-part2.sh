@@ -18,23 +18,25 @@ cd /workdir
 git clone --depth 1 https://github.com/vernesong/OpenClash.git
 cd OpenClash
 cp -r luci-app-openclash /workdir/openwrt/package/
-#mosdns
-cd /workdir/openwrt
-git clone --depth 1 https://github.com/sbwml/luci-app-mosdns -b v5 package/mosdns
 #aliyundrive-webdav
 cd /workdir
 git clone --depth 1 https://github.com/messense/aliyundrive-webdav.git
 cd aliyundrive-webdav/
 cp -r openwrt /workdir/openwrt/package/aliyundrive-webdav
-#arpbind
-cd /workdir
-git clone --depth 1 https://github.com/coolsnowwolf/luci.git
-cd luci/applications/
-cp -r luci-app-arpbind /workdir/openwrt/package/
-#autoreboot
-cp -r luci-app-autoreboot /workdir/openwrt/package/
-#vlmcsd
+#mosdns
 cd /workdir/openwrt
+git clone --depth 1 https://github.com/sbwml/luci-app-mosdns -b v5 package/mosdns
+#arpbind
+#cd /workdir
+#git clone --depth 1 https://github.com/coolsnowwolf/luci.git
+#cd luci/applications/
+#cp -r luci-app-arpbind /workdir/openwrt/package/
+#autoreboot
+git clone --depth 1 https://github.com/f8q8/luci-app-autoreboot.git package/luci-app-autoreboot
+git clone --depth 1 https://github.com/erdoukki/luci-app-arpbind.git package/luci-app-arpbind
+#cp -r luci-app-autoreboot /workdir/openwrt/package/
+#vlmcsd
+#cd /workdir/openwrt
 git clone --depth 1 https://github.com/siwind/openwrt-vlmcsd package/vlmcsd
 git clone --depth 1 https://github.com/siwind/luci-app-vlmcsd.git package/luci-app-vlmcsd
 #qbittorrent
