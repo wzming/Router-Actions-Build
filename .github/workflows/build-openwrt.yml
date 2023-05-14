@@ -87,6 +87,11 @@ jobs:
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
 
+    - name: Show config info
+      run: |
+        cd openwrt
+        cat .config
+
     - name: Compile the firmware
       id: compile
       run: |
