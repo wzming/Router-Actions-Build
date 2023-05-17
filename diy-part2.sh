@@ -42,17 +42,19 @@ sed -i 's/include ..\/..\/luci.mk/include $(TOPDIR)\/feeds\/luci\/luci.mk/g' /wo
 #mosdns
 cd /workdir/openwrt
 git clone --depth 1 https://github.com/sbwml/luci-app-mosdns -b v5 package/mosdns
+#qbittorrent
+git clone --depth 1 https://github.com/sbwml/openwrt-qBittorrent package/qBittorrent
+#alist
+git clone --depth 1 https://github.com/sbwml/luci-app-alist package/alist
+#OAF
+git clone --depth 1 https://github.com/destan19/OpenAppFilter.git package/OpenAppFilter
 #vlmcsd
 git clone --depth 1 https://github.com/siwind/openwrt-vlmcsd package/vlmcsd
 git clone --depth 1 https://github.com/siwind/luci-app-vlmcsd.git package/luci-app-vlmcsd
-#qbittorrent
-git clone --depth 1 https://github.com/sbwml/openwrt-qBittorrent package/qBittorrent
 #argon
 git clone --depth 1 https://github.com/jerrykuku/luci-theme-argon.git package/luci-theme-argon
 #pushbot
 git clone --depth 1 https://github.com/zzsj0928/luci-app-pushbot package/luci-app-pushbot
-#alist
-git clone --depth 1 https://github.com/sbwml/luci-app-alist package/alist
 #去除uhttpd
 sed -i 's/+uhttpd-mod-ubus//g' /workdir/openwrt/package/feeds/luci/luci-light/Makefile
 sed -i 's/+uhttpd \\//g' /workdir/openwrt/package/feeds/luci/luci-light/Makefile
