@@ -15,7 +15,7 @@
 
 # openclash
 cd /workdir
-git clone --depth 1 https://github.com/vernesong/OpenClash.git
+git clone --depth=1 --single-branch --branch "dev" https://github.com/vernesong/OpenClash.git
 cd OpenClash
 cp -r luci-app-openclash /workdir/openwrt/package/
 #aliyundrive-webdav
