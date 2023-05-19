@@ -41,7 +41,7 @@ sed -i 's/include ..\/..\/luci.mk/include $(TOPDIR)\/feeds\/luci\/luci.mk/g' /wo
 sed -i 's/include ..\/..\/luci.mk/include $(TOPDIR)\/feeds\/luci\/luci.mk/g' /workdir/openwrt/package/luci-app-autoreboot/Makefile
 #mosdns
 cd /workdir/openwrt
-git clone --depth 1 https://github.com/sbwml/luci-app-mosdns -b v5 package/mosdns
+git clone --depth 1 https://github.com/sbwml/luci-app-mosdns --single-branch -b v5 package/mosdns
 #qbittorrent
 git clone --depth 1 https://github.com/sbwml/openwrt-qBittorrent package/qBittorrent
 #alist
