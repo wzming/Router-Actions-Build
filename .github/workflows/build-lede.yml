@@ -8,7 +8,7 @@
 # Description: Build OpenWrt using GitHub Actions
 #
 
-name: Build OpenWrt For x86_64
+name: Build Lede For K2P
 
 on:
   workflow_dispatch:
@@ -17,12 +17,12 @@ on:
     - cron: '0 16 * * *'  # 16+8=24，相当于北京时间24点
 
 env:
-  REPO_URL: https://github.com/openwrt/openwrt.git
+  REPO_URL: https://github.com/coolsnowwolf/lede.git
   REPO_BRANCH: master
-  FEEDS_CONF: x86_64/feeds.conf.default
-  CONFIG_FILE: x86_64/.config
-  DIY_P1_SH: x86_64/diy-part1.sh
-  DIY_P2_SH: x86_64/diy-part2.sh
+  FEEDS_CONF: k2p/feeds.conf.default
+  CONFIG_FILE: k2p/.config
+  DIY_P1_SH: k2p/diy-part1.sh
+  DIY_P2_SH: k2p/diy-part2.sh
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
   UPLOAD_RELEASE: false
