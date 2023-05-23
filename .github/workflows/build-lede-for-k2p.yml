@@ -112,7 +112,15 @@ jobs:
         cd openwrt
         mkdir files
         cd files
-        mv $DEFAULT_CONFIG_DIR .
+        mv $GITHUB_WORKSPACE/$DEFAULT_CONFIG_DIR .
+
+    - name: Update etc config
+      run: |
+        cd openwrt/files/etc/uci-defaults/
+        sed -i 's/wlan_name=""/wlan_name="${{secrets.WLAN_NAME}}"/g' 99-custom
+        sed -i 's/wlan2_name=""/wlan2_name="${{secrets.WLAN_NAME_5G}}"/g' 99-custom
+        sed -i 's/wlan_password=""/wlan_password="${{secrets.WLAN_PASSWD_SECRET}}"/g' 99-custom
+        sed -i 's/root_password=""/root_password="${{secrets.PASSWD_SECRET}}"/g' 99-custom
 
     - name: Compile the firmware
       id: compile

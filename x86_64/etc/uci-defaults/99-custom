@@ -4,11 +4,11 @@
 # wlan_name="OpenWrt"
 # wlan_password="12345678"
 #
-root_password="password"
+root_password=""
 lan_ip_address="192.168.123.1"
 #
-# pppoe_username=""
-# pppoe_password=""
+pppoe_username=""
+pppoe_password=""
 
 # log potential errors
 exec >/tmp/setup.log 2>&1

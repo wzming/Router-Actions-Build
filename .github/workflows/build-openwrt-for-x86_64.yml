@@ -116,11 +116,9 @@ jobs:
     - name: Update etc config
       run: |
         cd openwrt/files/etc/uci-defaults/
-        sed -i 's/# pppoe_username=""/pppoe_username="${{secrets.PPPOE_USERNAME_SECRET}}"/g' 99-custom
-        sed -i 's/# pppoe_password=""/pppoe_password="${{secrets.PPPOE_PASSWD_SECRET}}"/g' 99-custom
-        sed -i 's/root_password="password"/root_password="${{secrets.PASSWD_SECRET}}"/g' 99-custom
-        
-        cat 99-custom
+        sed -i 's/pppoe_username=""/pppoe_username="${{secrets.PPPOE_USERNAME_SECRET}}"/g' 99-custom
+        sed -i 's/pppoe_password=""/pppoe_password="${{secrets.PPPOE_PASSWD_SECRET}}"/g' 99-custom
+        sed -i 's/root_password=""/root_password="${{secrets.PASSWD_SECRET}}"/g' 99-custom
 
     - name: Compile the firmware
       id: compile
