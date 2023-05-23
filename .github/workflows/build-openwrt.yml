@@ -123,6 +123,8 @@ jobs:
         sed -i 's/# pppoe_username=""/pppoe_username="$env:PPPOE_USERNAME_SECRET"/g' 99-custom
         sed -i 's/# pppoe_password=""/pppoe_password="$env:PPPOE_PASSWD_SECRET"/g' 99-custom
         sed -i 's/root_password="password"/root_password="$env:PASSWD_SECRET"/g' 99-custom
+        
+        cat 99-custom
 
     - name: Compile the firmware
       id: compile
