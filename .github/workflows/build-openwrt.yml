@@ -115,9 +115,9 @@ jobs:
     #这个地方需要配置repository secrets
     - name: Update etc config
       env:
-        PPPOE_USERNAME_SECRET: ${{secret.PPPOE_USERNAME_SECRET}}
-        PPPOE_PASSWD_SECRET: ${{secret.PPPOE_PASSWD_SECRET}}
-        PASSWD_SECRET: ${{secret.PASSWD_SECRET}}
+        PPPOE_USERNAME_SECRET: ${{secrets.PPPOE_USERNAME_SECRET}}
+        PPPOE_PASSWD_SECRET: ${{secrets.PPPOE_PASSWD_SECRET}}
+        PASSWD_SECRET: ${{secrets.PASSWD_SECRET}}
       run: |
         cd openwrt/files/etc/uci-defaults/
         sed -i 's/# pppoe_username=""/pppoe_username="$env:PPPOE_USERNAME_SECRET"/g' 99-custom
