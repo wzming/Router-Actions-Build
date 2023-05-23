@@ -106,12 +106,23 @@ jobs:
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
 
-    - name: Update defaults config
+    - name: Copy defaults etc config
       run: |
         cd openwrt
         mkdir files
         cd files
         mv $DEFAULT_CONFIG_DIR .
+    #这个地方需要配置repository secrets
+    - name: Update etc config
+      env:
+        PPPOE_USERNAME_SECRET: ${{secret.PPPOE_USERNAME_SECRET}}
+        PPPOE_PASSWD_SECRET: ${{secret.PPPOE_PASSWD_SECRET}}
+        PASSWD_SECRET: ${{secret.PASSWD_SECRET}}
+      run: |
+        cd openwrt/files/etc/uci-defaults/
+        sed -i 's/# pppoe_username=""/pppoe_username="$env:PPPOE_USERNAME_SECRET"/g' 99-custom
+        sed -i 's/# pppoe_password=""/pppoe_password="$env:PPPOE_PASSWD_SECRET"/g' 99-custom
+        sed -i 's/root_password="password"/root_password="$env:PASSWD_SECRET"/g' 99-custom
 
     - name: Compile the firmware
       id: compile
