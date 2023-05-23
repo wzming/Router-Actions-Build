@@ -27,6 +27,7 @@ env:
   UPLOAD_FIRMWARE: true
   UPLOAD_RELEASE: false
   TZ: Asia/Shanghai
+  DEFAULT_CONFIG_DIR: k2p/etc
 
 jobs:
   build:
@@ -106,10 +107,12 @@ jobs:
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
 
-    - name: Show config info
+    - name: Update defaults config
       run: |
         cd openwrt
-        cat .config
+        mkdir files
+        cd files
+        mv $DEFAULT_CONFIG_DIR .
 
     - name: Compile the firmware
       id: compile
