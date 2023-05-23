@@ -42,7 +42,7 @@ jobs:
       with:
         # this might remove tools that are actually needed,
         # if set to "true" but frees about 6 GB
-        tool-cache: false
+        tool-cache: true
 
         # all of these default to true, but feel free to set to
         # "false" if necessary for your workflow
@@ -111,7 +111,7 @@ jobs:
         cd openwrt
         mkdir files
         cd files
-        mv $DEFAULT_CONFIG_DIR .
+        mv $GITHUB_WORKSPACE/$DEFAULT_CONFIG_DIR .
     #这个地方需要配置repository secrets
     - name: Update etc config
       env:
