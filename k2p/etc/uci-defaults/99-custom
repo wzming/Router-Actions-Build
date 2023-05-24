@@ -52,6 +52,7 @@ fi
 #配置时区
 uci set system.@system[0].timezone="CST-8"
 uci set system.@system[0].zonename="Asia/Shanghai"
+uci set system.@system[0].ttylogin="1"
 uci commit system
 
 
