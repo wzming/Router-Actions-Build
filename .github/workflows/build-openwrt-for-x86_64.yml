@@ -27,7 +27,7 @@ env:
   UPLOAD_FIRMWARE: true
   UPLOAD_RELEASE: false
   TZ: Asia/Shanghai
-  DEFAULT_CONFIG_DIR: x86_64/etc
+  INIT_CUSTOM_CONFIG: true
 
 jobs:
   build:
@@ -106,19 +106,21 @@ jobs:
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
 
-    - name: Copy defaults etc config
+    - name: Install SSH Key
+      if: env.INIT_CUSTOM_CONFIG == 'true'
+      uses: shimataro/ssh-key-action@v2
+      with:
+        key: ${{ secrets.PULL_SETTING_REPO_KEY }}
+        known_hosts: unnecessary
+
+    - name: Init custom config
+      if: env.INIT_CUSTOM_CONFIG == 'true'
       run: |
-        cd openwrt
-        mkdir files
-        cd files
-        mv $GITHUB_WORKSPACE/$DEFAULT_CONFIG_DIR .
-    #这个地方需要配置repository secrets
-    - name: Update etc config
-      run: |
-        cd openwrt/files/etc/uci-defaults/
-        sed -i 's/pppoe_username=""/pppoe_username="${{secrets.PPPOE_USERNAME_SECRET}}"/g' 99-custom
-        sed -i 's/pppoe_password=""/pppoe_password="${{secrets.PPPOE_PASSWD_SECRET}}"/g' 99-custom
-        sed -i 's/root_password=""/root_password="${{secrets.PASSWD_SECRET}}"/g' 99-custom
+        git clone --depth 1 -b x86_64 --single-branch ${{secrets.PULL_SETTING_REPO_URL}} /workdir/config
+        cd /workdir/config
+        mkdir -p /workdir/openwrt/files
+        mv etc/* /workdir/openwrt/files/etc/
+        mv root /workdir/openwrt/files/
 
     - name: Compile the firmware
       id: compile

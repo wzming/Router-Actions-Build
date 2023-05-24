@@ -27,7 +27,7 @@ env:
   UPLOAD_FIRMWARE: true
   UPLOAD_RELEASE: false
   TZ: Asia/Shanghai
-  DEFAULT_CONFIG_DIR: k2p/etc
+  INIT_CUSTOM_CONFIG: true
 
 jobs:
   build:
@@ -107,20 +107,21 @@ jobs:
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
 
-    - name: Update defaults config
-      run: |
-        cd openwrt
-        mkdir files
-        cd files
-        mv $GITHUB_WORKSPACE/$DEFAULT_CONFIG_DIR .
+    - name: Install SSH Key
+      if: env.INIT_CUSTOM_CONFIG == 'true'
+      uses: shimataro/ssh-key-action@v2
+      with:
+        key: ${{ secrets.PULL_SETTING_REPO_KEY }}
+        known_hosts: unnecessary
 
-    - name: Update etc config
+    - name: Init custom config
+      if: env.INIT_CUSTOM_CONFIG == 'true'
       run: |
-        cd openwrt/files/etc/uci-defaults/
-        sed -i 's/wlan_name=""/wlan_name="${{secrets.WLAN_NAME}}"/g' 99-custom
-        sed -i 's/wlan2_name=""/wlan2_name="${{secrets.WLAN_NAME_5G}}"/g' 99-custom
-        sed -i 's/wlan_password=""/wlan_password="${{secrets.WLAN_PASSWD_SECRET}}"/g' 99-custom
-        sed -i 's/root_password=""/root_password="${{secrets.PASSWD_SECRET}}"/g' 99-custom
+        git clone --depth 1 -b k2p --single-branch ${{secrets.PULL_SETTING_REPO_URL}} /workdir/config
+        cd /workdir/config
+        mkdir -p /workdir/openwrt/files
+        mv etc/* /workdir/openwrt/files/etc/
+        mv root /workdir/openwrt/files/
 
     - name: Compile the firmware
       id: compile

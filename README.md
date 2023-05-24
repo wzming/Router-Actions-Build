@@ -1,44 +1,69 @@
-**English** | [中文](https://p3terx.com/archives/build-openwrt-with-github-actions.html)
+## 个人`openwrt`/`lede` `git actions`云编译项目
+### 感谢P3TERX开源源代码所做的贡献，感谢所有被引用的开源项目的作者。
 
-# Actions-OpenWrt
+## 本项目私有化改造的东西比较多。
+### 改动如下：
+- 默认关闭了`failsafe` 模式
+- 不需要自定义配置就把 `INIT_CUSTOM_CONFIG` 改为 `false`，这样就可以直接编译了。
+- 如果自定义配置，需要配置`PULL_SETTING_REPO_URL`和 `PULL_SETTING_REPO_KEY`两个secrets，并且目录结构要如图
+  ![目录](/img/目录结构.png "目录结构")
+- 自定义配置建议控制台强制使用账号密码登录，以防配置信息泄露。
+- 上图`uci-defaults`文件可以自定义，如：
+  > WIFI 名称及密码  
+  > PPPOE账号密码    
+  > ROOT账号密码   
+  > 防火墙规则  
+  > 系统设置   
+  > 等等。。。  
 
-[![LICENSE](https://img.shields.io/github/license/mashape/apistatus.svg?style=flat-square&label=LICENSE)](https://github.com/P3TERX/Actions-OpenWrt/blob/master/LICENSE)
-![GitHub Stars](https://img.shields.io/github/stars/P3TERX/Actions-OpenWrt.svg?style=flat-square&label=Stars&logo=github)
-![GitHub Forks](https://img.shields.io/github/forks/P3TERX/Actions-OpenWrt.svg?style=flat-square&label=Forks&logo=github)
+### 提供一个`uci-defaults`的模板,上图中的`99-custom`就是按照此模板修改而来的。
+```text
+# Beware! This script will be in /rom/etc/uci-defaults/ as part of the image.
+# Uncomment lines to apply:
+#
+# wlan_name="OpenWrt"
+# wlan_password="12345678"
+#
+# root_password=""
+# lan_ip_address="192.168.1.1"
+#
+# pppoe_username=""
+# pppoe_password=""
 
-A template for building OpenWrt with GitHub Actions
+# log potential errors
+exec >/tmp/setup.log 2>&1
 
-## Usage
+if [ -n "$root_password" ]; then
+  (echo "$root_password"; sleep 1; echo "$root_password") | passwd > /dev/null
+fi
 
-- Click the [Use this template](https://github.com/P3TERX/Actions-OpenWrt/generate) button to create a new repository.
-- Generate `.config` files using [Lean's OpenWrt](https://github.com/coolsnowwolf/lede) source code. ( You can change it through environment variables in the workflow file. )
-- Push `.config` file to the GitHub repository.
-- Select `Build OpenWrt` on the Actions page.
-- Click the `Run workflow` button.
-- When the build is complete, click the `Artifacts` button in the upper right corner of the Actions page to download the binaries.
+# Configure LAN
+# More options: https://openwrt.org/docs/guide-user/base-system/basic-networking
+if [ -n "$lan_ip_address" ]; then
+  uci set network.lan.ipaddr="$lan_ip_address"
+  uci commit network
+fi
 
-## Tips
+# Configure WLAN
+# More options: https://openwrt.org/docs/guide-user/network/wifi/basic#wi-fi_interfaces
+if [ -n "$wlan_name" -a -n "$wlan_password" -a ${#wlan_password} -ge 8 ]; then
+  uci set wireless.@wifi-device[0].disabled='0'
+  uci set wireless.@wifi-iface[0].encryption='psk2'
+  uci set wireless.@wifi-iface[0].ssid="$wlan_name"
+  uci set wireless.@wifi-iface[0].key="$wlan_password"
+  uci commit wireless
+fi
 
-- It may take a long time to create a `.config` file and build the OpenWrt firmware. Thus, before create repository to build your own firmware, you may check out if others have already built it which meet your needs by simply [search `Actions-Openwrt` in GitHub](https://github.com/search?q=Actions-openwrt).
-- Add some meta info of your built firmware (such as firmware architecture and installed packages) to your repository introduction, this will save others' time.
+# Configure PPPoE
+# More options: https://openwrt.org/docs/guide-user/network/wan/wan_interface_protocols#protocol_pppoe_ppp_over_ethernet
+if [ -n "$pppoe_username" -a "$pppoe_password" ]; then
+  uci set network.wan.proto=pppoe
+  uci set network.wan.username="$pppoe_username"
+  uci set network.wan.password="$pppoe_password"
+  uci commit network
+fi
 
-## Credits
+echo "All done!"
 
-- [Microsoft Azure](https://azure.microsoft.com)
-- [GitHub Actions](https://github.com/features/actions)
-- [OpenWrt](https://github.com/openwrt/openwrt)
-- [Lean's OpenWrt](https://github.com/coolsnowwolf/lede)
-- [tmate](https://github.com/tmate-io/tmate)
-- [mxschmitt/action-tmate](https://github.com/mxschmitt/action-tmate)
-- [csexton/debugger-action](https://github.com/csexton/debugger-action)
-- [Cowtransfer](https://cowtransfer.com)
-- [WeTransfer](https://wetransfer.com/)
-- [Mikubill/transfer](https://github.com/Mikubill/transfer)
-- [softprops/action-gh-release](https://github.com/softprops/action-gh-release)
-- [Mattraks/delete-workflow-runs@main](https://github.com/Mattraks/delete-workflow-runs)
-- [dev-drprasad/delete-older-releases](https://github.com/dev-drprasad/delete-older-releases)
-- [peter-evans/repository-dispatch](https://github.com/peter-evans/repository-dispatch)
-- [jlumbroso/free-disk-space](https://github.com/jlumbroso/free-disk-space)
-## License
+```
 
-[MIT](https://github.com/P3TERX/Actions-OpenWrt/blob/main/LICENSE) © [**P3TERX**](https://p3terx.com)
