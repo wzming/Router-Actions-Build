@@ -5,8 +5,10 @@
 ### 改动如下：
 - 默认关闭了`failsafe` 模式
 - 不需要自定义配置就把 `INIT_CUSTOM_CONFIG` 改为 `false`，这样就可以直接编译了。
-- 如果自定义配置，需要配置`PULL_SETTING_REPO_URL`和 `PULL_SETTING_REPO_KEY`两个secrets，并且目录结构要如图
+- 如果自定义配置，需要配置`PULL_SETTING_REPO_URL`和 `PULL_SETTING_REPO_KEY`两个secrets，并且目录结构要如图：       
+   
   ![目录](/img/目录结构.png "目录结构")
+     
 - 自定义配置建议控制台强制使用账号密码登录，以防配置信息泄露。
 - 上图`uci-defaults`文件可以自定义，如：
   > WIFI 名称及密码  
