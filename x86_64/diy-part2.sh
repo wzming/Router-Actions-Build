@@ -47,7 +47,7 @@ git clone --depth 1 https://github.com/sbwml/openwrt-qBittorrent package/qBittor
 #alist
 git clone --depth 1 https://github.com/sbwml/luci-app-alist package/alist
 #OAF
-#git clone --depth 1 https://github.com/destan19/OpenAppFilter.git package/OpenAppFilter
+git clone --depth 1 https://github.com/destan19/OpenAppFilter.git package/OpenAppFilter
 #vlmcsd
 git clone --depth 1 https://github.com/siwind/openwrt-vlmcsd package/vlmcsd
 git clone --depth 1 https://github.com/siwind/luci-app-vlmcsd.git package/luci-app-vlmcsd
