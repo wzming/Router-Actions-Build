@@ -32,13 +32,14 @@ cp -r openwrt /workdir/openwrt/package/aliyundrive-webdav
 
 
 #arpbind & autoreboot
-cd /workdir
-git clone --depth 1 https://github.com/coolsnowwolf/luci.git lede-luci
-cd lede-luci/applications/
-cp -r luci-app-arpbind /workdir/openwrt/package/
-cp -r luci-app-autoreboot /workdir/openwrt/package/
-sed -i 's/include ..\/..\/luci.mk/include $(TOPDIR)\/feeds\/luci\/luci.mk/g' /workdir/openwrt/package/luci-app-arpbind/Makefile
-sed -i 's/include ..\/..\/luci.mk/include $(TOPDIR)\/feeds\/luci\/luci.mk/g' /workdir/openwrt/package/luci-app-autoreboot/Makefile
+#cd /workdir
+#git clone --depth 1 https://github.com/coolsnowwolf/luci.git lede-luci
+#cd lede-luci/applications/
+#cp -r luci-app-arpbind /workdir/openwrt/package/
+#cp -r luci-app-autoreboot /workdir/openwrt/package/
+#sed -i 's/include ..\/..\/luci.mk/include $(TOPDIR)\/feeds\/luci\/luci.mk/g' /workdir/openwrt/package/luci-app-arpbind/Makefile
+#sed -i 's/include ..\/..\/luci.mk/include $(TOPDIR)\/feeds\/luci\/luci.mk/g' /workdir/openwrt/package/luci-app-autoreboot/Makefile
+#sed -i 's/LUCI_DEPENDS:=+luci/LUCI_DEPENDS:=/g' /workdir/openwrt/package/luci-app-autoreboot/Makefile
 #mosdns
 cd /workdir/openwrt
 git clone --depth 1 https://github.com/sbwml/luci-app-mosdns --single-branch -b v5 package/mosdns
