@@ -54,7 +54,7 @@ git clone --depth 1 https://github.com/siwind/openwrt-vlmcsd package/vlmcsd
 git clone --depth 1 https://github.com/siwind/luci-app-vlmcsd.git package/luci-app-vlmcsd
 #argon
 git clone --depth 1 https://github.com/jerrykuku/luci-theme-argon.git package/luci-theme-argon
-git clone --depth 1 https://github.com/jerrykuku/luci-theme-argon-config.git package/luci-theme-argon-config
+git clone --depth 1 https://github.com/jerrykuku/luci-app-argon-config.git package/luci-app-argon-config
 #pushbot
 git clone --depth 1 https://github.com/zzsj0928/luci-app-pushbot package/luci-app-pushbot
 #去除uhttpd
