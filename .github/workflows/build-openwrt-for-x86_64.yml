@@ -11,6 +11,7 @@
 name: Build OpenWrt For x86_64
 
 on:
+  push:
   workflow_dispatch:
   schedule:
     #UTC时间，比北京时间慢8个小时

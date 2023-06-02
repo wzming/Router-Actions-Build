@@ -11,6 +11,7 @@
 name: Build Lede For K2P
 
 on:
+  push:
   workflow_dispatch:
   schedule:
     #UTC时间，比北京时间慢8个小时
