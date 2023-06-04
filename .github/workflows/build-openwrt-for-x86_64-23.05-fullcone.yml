@@ -8,7 +8,7 @@
 # Description: Build OpenWrt using GitHub Actions
 #
 
-name: Build OpenWrt SNAPSHOT For Fullcone
+name: Build OpenWrt23.05 For Fullcone
 
 on:
   push:
@@ -19,17 +19,17 @@ on:
 
 env:
   REPO_URL: https://github.com/openwrt/openwrt.git
-  REPO_BRANCH: main
-  FEEDS_CONF: x86_64_fullcone/feeds.conf.default
-  CONFIG_FILE: x86_64_fullcone/.config
-  DIY_P1_SH: x86_64_fullcone/diy-part1.sh
-  DIY_P2_SH: x86_64_fullcone/diy-part2.sh
+  REPO_BRANCH: openwrt-23.05
+  FEEDS_CONF: x86_64_23.05_fullcone/feeds.conf.default
+  CONFIG_FILE: x86_64_23.05_fullcone/.config
+  DIY_P1_SH: x86_64_23.05_fullcone/diy-part1.sh
+  DIY_P2_SH: x86_64_23.05_fullcone/diy-part2.sh
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
   UPLOAD_RELEASE: false
   TZ: Asia/Shanghai
   INIT_CUSTOM_CONFIG: true
-  FULLCONE_PATCH_PATH: x86_64_fullcone/luci-app-firewall-fullcone.patch
+  FULLCONE_PATCH_PATH: x86_64_23.05_fullcone/luci-app-firewall-fullcone.patch
 
 jobs:
   build:
