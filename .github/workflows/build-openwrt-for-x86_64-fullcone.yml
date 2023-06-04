@@ -8,7 +8,7 @@
 # Description: Build OpenWrt using GitHub Actions
 #
 
-name: Build OpenWrt For Fullcone-Net
+name: Build OpenWrt For Fullcone
 
 on:
   push:
@@ -29,7 +29,7 @@ env:
   UPLOAD_RELEASE: false
   TZ: Asia/Shanghai
   INIT_CUSTOM_CONFIG: true
-  FULLCONE_PATHC_PATH: x86_64_fullcone/luci-app-firewall-fullcone.patch
+  FULLCONE_PATCH_PATH: x86_64_fullcone/luci-app-firewall-fullcone.patch
 
 jobs:
   build:
@@ -124,7 +124,7 @@ jobs:
         mv etc /workdir/openwrt/files/
         mv root /workdir/openwrt/files/
         #luci界面打补丁
-        git -C /workdir/openwrt/feeds/luci apply --ignore-space-change --ignore-whitespace $GITHUB_WORKSPACE/$FULLCONE_PATHC_PATH
+        git -C /workdir/openwrt/feeds/luci apply --ignore-space-change --ignore-whitespace $GITHUB_WORKSPACE/$FULLCONE_PATCH_PATH
         
 
     - name: Compile the firmware
