@@ -24,6 +24,8 @@ env:
   CONFIG_FILE: x86_64_fullcone/.config
   DIY_P1_SH: x86_64_fullcone/diy-part1.sh
   DIY_P2_SH: x86_64_fullcone/diy-part2.sh
+  FULLCONE_SH: x86_64_fullcone/fullcone.sh
+  ADD_FULLCONE: true
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
   UPLOAD_RELEASE: false
@@ -99,15 +101,6 @@ jobs:
         ls package/
         df -hT $PWD
 
-    - name: Download package
-      id: package
-      run: |
-        cd openwrt
-        make defconfig
-        make download -j8
-        find dl -size -1024c -exec ls -l {} \;
-        find dl -size -1024c -exec rm -f {} \;
-
     - name: Install SSH Key
       if: env.INIT_CUSTOM_CONFIG == 'true'
       uses: shimataro/ssh-key-action@v2
@@ -123,9 +116,22 @@ jobs:
         mkdir -p /workdir/openwrt/files
         mv etc /workdir/openwrt/files/
         mv root /workdir/openwrt/files/
+
+    - name: Append Fullcone Nat depend
+      if: env.ADD_FULLCONE == 'true'
+      run: |
+        chmod +x $FULLCONE_SH
         #luci界面打补丁
         git -C /workdir/openwrt/feeds/luci apply --ignore-space-change --ignore-whitespace $GITHUB_WORKSPACE/$FULLCONE_PATCH_PATH
-        
+
+    - name: Download package
+      id: package
+      run: |
+        cd openwrt
+        make defconfig
+        make download -j8
+        find dl -size -1024c -exec ls -l {} \;
+        find dl -size -1024c -exec rm -f {} \;
 
     - name: Compile the firmware
       id: compile
