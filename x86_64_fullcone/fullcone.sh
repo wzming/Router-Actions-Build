@@ -1,5 +1,5 @@
 #!/bin/bash
-
+cd /workdir/openwrt
 git clone --depth 1 https://github.com/fullcone-nat-nftables/nft-fullcone.git package/fullcone
 #fullcone net
 cd /workdir
