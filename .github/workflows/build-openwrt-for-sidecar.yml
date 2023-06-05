@@ -29,7 +29,7 @@ env:
   UPLOAD_RELEASE: false
   TZ: Asia/Shanghai
   INIT_CUSTOM_CONFIG: true
-
+  FULLCONE_PATCH_PATH: sidecar/luci-app-firewall-fullcone.patch
 jobs:
   build:
     runs-on: ubuntu-latest
