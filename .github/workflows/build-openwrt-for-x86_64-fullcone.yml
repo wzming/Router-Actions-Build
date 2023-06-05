@@ -34,6 +34,8 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
+    concurrency:
+      cancel-in-progress: true
 
     steps:
     - name: Checkout
