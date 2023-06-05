@@ -37,3 +37,6 @@ sed -i 's/luci-theme-bootstrap/luci-theme-argon/g'  /workdir/openwrt/package/fee
 sed -i 's/luci-theme-bootstrap/luci-theme-argon/g'  /workdir/openwrt/package/feeds/luci/luci-nginx/Makefile
 sed -i 's/luci-theme-bootstrap/luci-theme-argon/g'  /workdir/openwrt/package/feeds/luci/luci-ssl-nginx/Makefile
 
+mkdir -p /workdir/openwrt/feeds/luci/applications/luci-app-firewall/patches
+cp $GITHUB_WORKSPACE/$FULLCONE_PATCH_PATH /workdir/openwrt/feeds/luci/applications/luci-app-firewall/patches
+

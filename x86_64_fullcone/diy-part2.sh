@@ -57,6 +57,10 @@ git clone --depth 1 https://github.com/jerrykuku/luci-theme-argon.git package/lu
 git clone --depth 1 https://github.com/jerrykuku/luci-app-argon-config.git package/luci-app-argon-config
 #pushbot
 git clone --depth 1 https://github.com/zzsj0928/luci-app-pushbot package/luci-app-pushbot
+#unblockneteasemusic
+git clone --depth 1 https://github.com/UnblockNeteaseMusic/luci-app-unblockneteasemusic.git package/unblockneteasemusic
+
+
 #去除uhttpd
 sed -i 's/+uhttpd-mod-ubus//g' /workdir/openwrt/package/feeds/luci/luci-light/Makefile
 sed -i 's/+uhttpd \\//g' /workdir/openwrt/package/feeds/luci/luci-light/Makefile
