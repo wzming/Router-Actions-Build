@@ -121,8 +121,10 @@ jobs:
       if: env.ADD_FULLCONE == 'true'
       run: |
         chmod +x $FULLCONE_SH
-        #luci界面打补丁
-        git -C /workdir/openwrt/feeds/luci apply --ignore-space-change --ignore-whitespace $GITHUB_WORKSPACE/$FULLCONE_PATCH_PATH
+        cd openwrt
+        $GITHUB_WORKSPACE/$FULLCONE_SH
+        cd feeds/luci
+        git diff applications/luci-app-firewall/htdocs/luci-static/resources/view/firewall/zones.js
 
     - name: Download package
       id: package

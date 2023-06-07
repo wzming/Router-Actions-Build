@@ -10,3 +10,5 @@ cp -r package/network/config/firewall4/patches /workdir/openwrt/package/network/
 cp -r package/libs/libnftnl/patches /workdir/openwrt/package/libs/libnftnl
 #libnftnl
 sed -i 's/PKG_LICENSE_FILES:=COPYING/PKG_LICENSE_FILES:=COPYING \nPKG_FIXUP:=autoreconf/g' /workdir/openwrt/package/libs/libnftnl/Makefile
+#luci界面打补丁
+git -C /workdir/openwrt/feeds/luci apply --ignore-space-change --ignore-whitespace $GITHUB_WORKSPACE/$FULLCONE_PATCH_PATH
