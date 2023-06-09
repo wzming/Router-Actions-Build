@@ -29,7 +29,7 @@ git clone --depth 1 https://github.com/jerrykuku/luci-theme-argon.git luci-theme
 #pushbot
 git clone --depth 1 https://github.com/zzsj0928/luci-app-pushbot luci-app-pushbot
 #unblockneteasemusic
-git clone --depth 1 https://github.com/UnblockNeteaseMusic/luci-app-unblockneteasemusic.git unblockneteasemusic
+#git clone --depth 1 https://github.com/UnblockNeteaseMusic/luci-app-unblockneteasemusic.git unblockneteasemusic
 
 
 #去除uhttpd

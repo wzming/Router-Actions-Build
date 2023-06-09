@@ -12,9 +12,9 @@ name: Build OpenWrt For x86_64
 
 on:
   workflow_dispatch:
-  schedule:
-    #UTC时间，比北京时间慢8个小时
-    - cron: '0 16 * * *'  # 16+8=24，相当于北京时间24点
+#  schedule:
+#    #UTC时间，比北京时间慢8个小时
+#    - cron: '0 16 * * *'  # 16+8=24，相当于北京时间24点
 
 env:
   REPO_URL: https://github.com/openwrt/openwrt.git
@@ -37,7 +37,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@main
 
-    - name: Free Disk Space (Ubuntu)
+    - name: Free Disk Space
       uses: jlumbroso/free-disk-space@main
       with:
         # this might remove tools that are actually needed,
