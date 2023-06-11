@@ -25,6 +25,7 @@ env:
   DIY_P1_SH: x86_64_fullcone/diy-part1.sh
   DIY_P2_SH: x86_64_fullcone/diy-part2.sh
   FULLCONE_SH: x86_64_fullcone/fullcone.sh
+  CONFIG_SH: x86_64_fullcone/config.sh
   ADD_FULLCONE: true
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
@@ -111,11 +112,8 @@ jobs:
     - name: Init custom config
       if: env.INIT_CUSTOM_CONFIG == 'true'
       run: |
-        git clone --depth 1 -b x86_64 --single-branch ${{secrets.PULL_SETTING_REPO_URL}} /workdir/config
-        cd /workdir/config
-        mkdir -p /workdir/openwrt/files
-        mv etc /workdir/openwrt/files/
-        mv root /workdir/openwrt/files/
+        chmod +x $CONFIG_SH
+        $GITHUB_WORKSPACE/$CONFIG_SH
 
     - name: Append Fullcone Nat depend
       if: env.ADD_FULLCONE == 'true'
