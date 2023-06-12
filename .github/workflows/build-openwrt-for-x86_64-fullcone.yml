@@ -113,7 +113,7 @@ jobs:
       if: env.INIT_CUSTOM_CONFIG == 'true'
       run: |
         chmod +x $CONFIG_SH
-        $GITHUB_WORKSPACE/$CONFIG_SH
+        $GITHUB_WORKSPACE/$CONFIG_SH ${{secrets.PULL_SETTING_REPO_URL}}
 
     - name: Append Fullcone Nat depend
       if: env.ADD_FULLCONE == 'true'
