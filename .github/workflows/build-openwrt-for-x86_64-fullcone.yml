@@ -42,6 +42,10 @@ jobs:
     - name: Checkout
       uses: actions/checkout@main
 
+    - name: Before free disk space
+      run: |
+        sudo -E apt update -y
+
     - name: Free Disk Space
       uses: jlumbroso/free-disk-space@main
       with:
