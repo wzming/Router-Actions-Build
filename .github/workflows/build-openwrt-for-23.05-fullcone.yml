@@ -8,7 +8,7 @@
 # Description: Build OpenWrt using GitHub Actions
 #
 
-name: OpenWrt SNAPSHOT with Fullcone
+name: OpenWrt 23.05 with Fullcone
 
 on:
   push:
