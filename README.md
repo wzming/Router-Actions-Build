@@ -1,9 +1,9 @@
-## 个人`openwrt`/`lede` `git actions`云编译项目
+## `openwrt`/`lede` `git actions`云编译项目
 ### 感谢P3TERX开源源代码所做的贡献，感谢所有被引用的开源项目的作者。
 
 ## 本项目私有化改造的东西比较多。
 - 各版本介绍如下
-> x86_64版本用做主路由   
+> x86_64版本用做主路由,默认会编译fullcone_nat模块,不需要的要在yml文件修改`ADD_FULLCONE`为`false`       
 > K2P版本是用来挂`wireguard`的   
 >Sidecar用于旁路由，挂梯子，精简了比较多的模块，比如PPP拨号模块等等。
    
