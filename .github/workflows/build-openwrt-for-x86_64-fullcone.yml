@@ -12,9 +12,9 @@ name: OpenWrt SNAPSHOT with Fullcone
 
 on:
   push:
+    paths:
+      - 'x86_64_fullcone/.config'
   workflow_dispatch:
-  paths:
-    - 'x86_64_fullcone/.config'
   schedule:
     #UTC时间，比北京时间慢8个小时
     - cron: '0 16 * * *'  # 16+8=24，相当于北京时间24点

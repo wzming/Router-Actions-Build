@@ -12,9 +12,9 @@ name: OpenWrt 23.05 with Fullcone
 
 on:
   push:
-  workflow_dispatch:
     paths:
-      - 'k2p/.config'
+      - 'x86_64_fullcone/.config'
+  workflow_dispatch:
   schedule:
     #UTC时间，比北京时间慢8个小时
     - cron: '0 16 * * *'  # 16+8=24，相当于北京时间24点
