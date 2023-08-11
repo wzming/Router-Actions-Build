@@ -12,6 +12,8 @@ name: Build OpenWrt For Sidecar
 
 on:
   workflow_dispatch:
+  paths:
+    - 'sidecar/.config'
   schedule:
     #UTC时间，比北京时间慢8个小时
     - cron: '0 16 * * *'  # 16+8=24，相当于北京时间24点
