@@ -40,8 +40,10 @@ cp -r openwrt /workdir/openwrt/package/aliyundrive-webdav
 #sed -i 's/include ..\/..\/luci.mk/include $(TOPDIR)\/feeds\/luci\/luci.mk/g' /workdir/openwrt/package/luci-app-arpbind/Makefile
 #sed -i 's/include ..\/..\/luci.mk/include $(TOPDIR)\/feeds\/luci\/luci.mk/g' /workdir/openwrt/package/luci-app-autoreboot/Makefile
 #sed -i 's/LUCI_DEPENDS:=+luci/LUCI_DEPENDS:=/g' /workdir/openwrt/package/luci-app-autoreboot/Makefile
-#mosdns
 cd /workdir/openwrt
+#mosdns
+rm -rf feeds/packages/net/v2ray-geodata
+git clone --depth 1 https://github.com/sbwml/v2ray-geodata package/v2ray-geodata
 git clone --depth 1 https://github.com/sbwml/luci-app-mosdns --single-branch -b v5 package/mosdns
 #qbittorrent
 git clone --depth 1 https://github.com/sbwml/openwrt-qBittorrent package/qBittorrent
