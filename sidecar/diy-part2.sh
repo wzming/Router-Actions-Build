@@ -28,9 +28,10 @@ git clone --depth=1 https://github.com/fw876/helloworld.git helloworld
 git clone --depth 1 https://github.com/jerrykuku/luci-theme-argon.git luci-theme-argon
 #pushbot
 git clone --depth 1 https://github.com/zzsj0928/luci-app-pushbot luci-app-pushbot
-#unblockneteasemusic
-#git clone --depth 1 https://github.com/UnblockNeteaseMusic/luci-app-unblockneteasemusic.git unblockneteasemusic
-
+#golang
+cd /workdir/openwrt
+rm -rf feeds/packages/lang/golang
+svn co https://github.com/openwrt/packages/branches/openwrt-23.05/lang/golang feeds/packages/lang/golang
 
 #去除uhttpd
 sed -i 's/+uhttpd-mod-ubus//g' /workdir/openwrt/package/feeds/luci/luci-light/Makefile
