@@ -14,6 +14,8 @@ on:
   push:
     paths:
       - 'sidecar/.config'
+      - 'sidecar/diy-part1.sh'
+      - 'sidecar/diy-part2.sh'
   workflow_dispatch:
   schedule:
     #UTC时间，比北京时间慢8个小时

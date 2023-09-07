@@ -14,6 +14,10 @@ on:
   push:
     paths:
       - 'x86_64_fullcone/.config'
+      - 'x86_64_fullcone/config.sh'
+      - 'x86_64_fullcone/diy-part1.sh'
+      - 'x86_64_fullcone/diy-part2.sh'
+      - 'x86_64_fullcone/fullcone.sh'
   workflow_dispatch:
   schedule:
     #UTC时间，比北京时间慢8个小时
