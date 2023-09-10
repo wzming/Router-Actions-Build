@@ -93,6 +93,7 @@ git clone --depth 1 https://github.com/jerrykuku/luci-app-argon-config.git packa
 git clone --depth 1 https://github.com/zzsj0928/luci-app-pushbot package/luci-app-pushbot
 #unblockneteasemusic
 git clone --depth 1 https://github.com/UnblockNeteaseMusic/luci-app-unblockneteasemusic.git package/unblockneteasemusic
+mkdir -p package/unblockneteasemusic/root/usr/share/unblockneteasemusic/core
 
 export core_latest_ver="$(wget -qO- 'https://api.github.com/repos/UnblockNeteaseMusic/server/commits?sha=enhanced&path=precompiled' | jsonfilter -e '@[0].sha')"
 for file in $(wget -qO- "https://api.github.com/repos/UnblockNeteaseMusic/server/contents/precompiled" | jsonfilter -e '@[*].path')
