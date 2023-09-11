@@ -111,6 +111,7 @@ for cert in "ca.crt" "server.crt" "server.key"
 		}
 	done
 echo -e "$core_latest_ver" > "package/unblockneteasemusic/root/usr/share/unblockneteasemusic/core_local_ver"
+tree package/unblockneteasemusic/root/usr/share/unblockneteasemusic
 
 #去除uhttpd
 sed -i 's/+uhttpd-mod-ubus//g' package/feeds/luci/luci-light/Makefile
