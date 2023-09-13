@@ -2,15 +2,13 @@ name: Build N1 OpenWrt
 
 on:
   push:
-    branches:
-      - main
     paths:
       - 'n1/.config'
       - 'n1/diy-part1.sh'
       - 'n1/diy-part2.sh'
   schedule:
     - cron: 0 16 * * *
-
+  workflow_dispatch:
 env:
   REPO_URL: https://github.com/openwrt/openwrt.git
   REPO_BRANCH: main
