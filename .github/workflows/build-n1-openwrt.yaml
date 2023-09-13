@@ -12,6 +12,7 @@ on:
 env:
   REPO_URL: https://github.com/openwrt/openwrt.git
   REPO_BRANCH: main
+  FEEDS_CONF: n1/feeds.conf.default
   CONFIG_FILE: n1/.config
   DIY_P1_SH: n1/diy-part1.sh
   DIY_P2_SH: n1/diy-part2.sh
