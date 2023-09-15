@@ -126,6 +126,7 @@ jobs:
       env:
         OPENWRT_ARMVIRT: openwrt/bin/targets/*/*/*.tar.gz
         PACKAGE_SOC: s905d
+        KERNEL_VERSION_NAME: 6.1.1
         KERNEL_AUTO_LATEST: true
         WHOAMI: king
 
@@ -156,8 +157,9 @@ jobs:
 
     - name: Remove old Releases
       uses: dev-drprasad/delete-older-releases@v0.2.1
+      if: env.UPLOAD_RELEASE == 'true' && !cancelled()
       with:
         keep_latest: 3
         delete_tags: true
       env:
-        GITHUB_TOKEN: ${{ secrets.actions_release }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
