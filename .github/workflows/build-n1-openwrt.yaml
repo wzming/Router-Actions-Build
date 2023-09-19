@@ -20,7 +20,7 @@ env:
   TZ: Asia/Shanghai
 
 jobs:
-  build_openwrt:
+  build_n1_openwrt:
     runs-on: ubuntu-latest
 
     steps:
@@ -132,6 +132,7 @@ jobs:
         KERNEL_VERSION_NAME: 5.15.1
         KERNEL_AUTO_LATEST: true
         WHOAMI: king
+        OPENWRT_VER: R23.9.20
 
     - name: Organize files
       id: organize
