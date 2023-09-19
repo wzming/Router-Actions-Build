@@ -1,9 +1,15 @@
 #!/bin/bash
-#argon
-git clone --depth 1 https://github.com/jerrykuku/luci-theme-argon.git package/luci-theme-argon
-git clone --depth 1 https://github.com/jerrykuku/luci-app-argon-config.git package/luci-app-argon-config
+
+# Add autocore support for armvirt
+sed -i 's/TARGET_rockchip/TARGET_rockchip\|\|TARGET_armvirt/g' package/lean/autocore/Makefile
+
+# Set etc/openwrt_release
+sed -i "s|DISTRIB_REVISION='.*'|DISTRIB_REVISION='R$(date +%Y.%m.%d)'|g" package/lean/default-settings/files/zzz-default-settings
+echo "DISTRIB_SOURCECODE='lede'" >>package/base-files/files/etc/openwrt_release
+
+
 #unblockneteasemusic
-git clone --depth 1 https://github.com/UnblockNeteaseMusic/luci-app-unblockneteasemusic.git package/unblockneteasemusic
+git clone --depth 1 --branch=master https://github.com/UnblockNeteaseMusic/luci-app-unblockneteasemusic.git package/unblockneteasemusic
 mkdir -p package/unblockneteasemusic/root/usr/share/unblockneteasemusic/core
 
 export core_latest_ver="$(wget -qO- 'https://api.github.com/repos/UnblockNeteaseMusic/server/commits?sha=enhanced&path=precompiled' | jq -r '.[0].sha')"
@@ -23,14 +29,6 @@ for cert in "ca.crt" "server.crt" "server.key"
 	done
 echo -e "$core_latest_ver" > "package/unblockneteasemusic/root/usr/share/unblockneteasemusic/core_local_ver"
 
-#去除uhttpd
-sed -i 's/+uhttpd-mod-ubus//g' package/feeds/luci/luci-light/Makefile
-sed -i 's/+uhttpd \\//g' package/feeds/luci/luci-light/Makefile
-sed -i 's/+rpcd-mod-rrdns \\/+rpcd-mod-rrdns/g'  package/feeds/luci/luci-light/Makefile
-#替换默认主题
-sed -i 's/luci-theme-bootstrap/luci-theme-argon/g'  package/feeds/luci/luci-light/Makefile
-sed -i 's/luci-theme-bootstrap/luci-theme-argon/g'  package/feeds/luci/luci-nginx/Makefile
-sed -i 's/luci-theme-bootstrap/luci-theme-argon/g'  package/feeds/luci/luci-ssl-nginx/Makefile
 
 
 
