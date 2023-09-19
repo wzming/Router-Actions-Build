@@ -11,7 +11,7 @@ on:
   workflow_dispatch:
 env:
   REPO_URL: https://github.com/coolsnowwolf/lede.git
-  REPO_BRANCH: main
+  REPO_BRANCH: master
   FEEDS_CONF: n1/feeds.conf.default
   CONFIG_FILE: n1/.config
   DIY_P1_SH: n1/diy-part1.sh
@@ -145,7 +145,7 @@ jobs:
       with:
         name: OpenWrt_firmware
         path: |
-            ${{ env.FIRMWARE }}
+#            ${{ env.FIRMWARE }}
             ${{ env.PACKAGED_OUTPUTPATH }}
 
 
