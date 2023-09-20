@@ -133,7 +133,7 @@ jobs:
         KERNEL_VERSION_NAME: 5.15.1
         KERNEL_AUTO_LATEST: true
         WHOAMI: king
-        OPENWRT_VER: ${{OPENWRT_VER}}
+        OPENWRT_VER: ${{env.OPENWRT_VER}}
 
     - name: Organize files
       id: organize
