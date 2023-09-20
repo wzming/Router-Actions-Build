@@ -148,7 +148,7 @@ jobs:
       uses: actions/upload-artifact@v3
       if: steps.organize.outputs.status == 'success' && !cancelled()
       with:
-        name: OpenWrt_firmware${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
+        name: OpenWrt_N1_firmware${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
         path: |
             ${{ env.PACKAGED_OUTPUTPATH }}
 
