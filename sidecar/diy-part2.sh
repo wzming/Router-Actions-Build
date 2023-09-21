@@ -51,28 +51,22 @@ chmod +x ./clash* ; rm -rf ./*.gz
 cd /workdir/OpenClash
 cp -r luci-app-openclash /workdir/openwrt/package/
 
-# passwall
-cd /workdir/openwrt/package/
-git clone --depth 1 --single-branch --branch 'luci' https://github.com/xiaorouji/openwrt-passwall.git passwall
-git clone --depth 1 --single-branch --branch 'main' https://github.com/xiaorouji/openwrt-passwall2.git passwall2
-#helloworld
-git clone --depth=1 https://github.com/fw876/helloworld.git helloworld
-#argon
-git clone --depth 1 https://github.com/jerrykuku/luci-theme-argon.git luci-theme-argon
-#pushbot
-git clone --depth 1 https://github.com/zzsj0928/luci-app-pushbot luci-app-pushbot
-#golang
 cd /workdir/openwrt
+#argon
+git clone --depth 1 https://github.com/jerrykuku/luci-theme-argon.git package/luci-theme-argon
+#pushbot
+git clone --depth 1 https://github.com/zzsj0928/luci-app-pushbot package/luci-app-pushbot
+#golang
 rm -rf feeds/packages/lang/golang
 svn co https://github.com/openwrt/packages/branches/openwrt-23.05/lang/golang feeds/packages/lang/golang
 
 #去除uhttpd
-sed -i 's/+uhttpd-mod-ubus//g' /workdir/openwrt/package/feeds/luci/luci-light/Makefile
-sed -i 's/+uhttpd \\//g' /workdir/openwrt/package/feeds/luci/luci-light/Makefile
-sed -i 's/+rpcd-mod-rrdns \\/+rpcd-mod-rrdns/g'  /workdir/openwrt/package/feeds/luci/luci-light/Makefile
+sed -i 's/+uhttpd-mod-ubus//g' package/feeds/luci/luci-light/Makefile
+sed -i 's/+uhttpd \\//g' package/feeds/luci/luci-light/Makefile
+sed -i 's/+rpcd-mod-rrdns \\/+rpcd-mod-rrdns/g'  package/feeds/luci/luci-light/Makefile
 #替换默认主题
-sed -i 's/luci-theme-bootstrap/luci-theme-argon/g'  /workdir/openwrt/package/feeds/luci/luci-light/Makefile
-sed -i 's/luci-theme-bootstrap/luci-theme-argon/g'  /workdir/openwrt/package/feeds/luci/luci-nginx/Makefile
-sed -i 's/luci-theme-bootstrap/luci-theme-argon/g'  /workdir/openwrt/package/feeds/luci/luci-ssl-nginx/Makefile
+sed -i 's/luci-theme-bootstrap/luci-theme-argon/g'  package/feeds/luci/luci-light/Makefile
+sed -i 's/luci-theme-bootstrap/luci-theme-argon/g'  package/feeds/luci/luci-nginx/Makefile
+sed -i 's/luci-theme-bootstrap/luci-theme-argon/g'  package/feeds/luci/luci-ssl-nginx/Makefile
 
 
