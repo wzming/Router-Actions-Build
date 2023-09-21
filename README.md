@@ -1,14 +1,16 @@
 ## `openwrt`/`lede` `git actions`云编译项目
 ### 感谢P3TERX开源源代码所做的贡献，感谢所有被引用的开源项目的作者。
 
-## 本项目私有化改造的东西比较多。
+## 本项目私有化改造的东西比较多,可做参考,无法直接用。
 - 各版本介绍如下
-> x86_64版本用做主路由,默认会编译fullcone_nat模块,不需要的要在yml文件修改`ADD_FULLCONE`为`false`       
+> x86_64版本用做主路由,默认会编译`fullcone_nat`模块,不需要的要在yml文件修改`ADD_FULLCONE`为`false`       
 > K2P版本是用来挂`wireguard`的   
->Sidecar用于旁路由，挂梯子，精简了比较多的模块，比如PPP拨号模块等等。
+> Sidecar用于旁路由，挂梯子，精简了比较多的模块，比如PPP拨号模块等等。  
+> N1跟Sidecar差不多。
    
 
 ### 改动如下：
+- 对输出文件默认进行加密,没有配置开关,需自行添加一个secrets,变量名为`ENCRYPTED_PASSWD`.
 - 默认关闭了`failsafe` 模式
 - 不需要自定义配置就把 `INIT_CUSTOM_CONFIG` 改为 `false`，这样就可以直接编译了。
 - 如果自定义配置，需要配置`PULL_SETTING_REPO_URL`和 `PULL_SETTING_REPO_KEY`两个secrets，并且目录结构要如图：       
