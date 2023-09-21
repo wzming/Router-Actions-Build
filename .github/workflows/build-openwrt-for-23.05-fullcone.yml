@@ -171,6 +171,10 @@ jobs:
       run: |
         cd openwrt/bin/targets/*/*
         rm -rf packages
+        rm -rf *.bin
+        zip -rP ${{secrets.ENCRYPTED_PASSWD}} openwrt-x86-64-generic-squashfs-combined-efi.zip openwrt-x86-64-generic-squashfs-combined-efi.img.gz
+        rm -rf *.gz
+        find . -type f -name '*rootfs*' -exec rm -rf {} \;
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
         echo "status=success" >> $GITHUB_OUTPUT
 

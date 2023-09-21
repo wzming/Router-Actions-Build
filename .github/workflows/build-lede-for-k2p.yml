@@ -155,6 +155,8 @@ jobs:
       run: |
         cd openwrt/bin/targets/*/*
         rm -rf packages
+        find . -type f -name '*sysupgrade*' -exec zip -e -P ${{secrets.ENCRYPTED_PASSWD}} archive.zip {} +
+        find . -type f -name '*bin*' -exec rm -rf {} \;
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
         echo "status=success" >> $GITHUB_OUTPUT
 
