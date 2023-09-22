@@ -1,12 +1,12 @@
 ## `openwrt`/`lede` `git actions`云编译项目
 ### 感谢P3TERX开源源代码所做的贡献，感谢所有被引用的开源项目的作者。
 
-## 本项目私有化改造的东西比较多,可做参考,无法直接用。
+## 本项目私有化改造的东西比较多,可做参考,无法直接用,下载下来的压缩包是带有密码的。
 - 各版本介绍如下
-> x86_64版本用做主路由,默认会编译`fullcone_nat`模块,不需要的要在yml文件修改`ADD_FULLCONE`为`false`       
-> K2P版本是用来挂`wireguard`的   
-> Sidecar用于旁路由，挂梯子，精简了比较多的模块，比如PPP拨号模块等等。  
-> N1跟Sidecar差不多。
+> x86_64版本用做主路由,默认会编译`fullcone_nat`模块,不需要的要在yml文件修改`ADD_FULLCONE`为`false`,使用的是原版[openwrt](https://github.com/openwrt/openwrt)源码,个人喜欢追新,原版的功能和应用都是用的新的.      
+> K2P版本是用来挂`wireguard`的,采用的是[LEDE](https://github.com/coolsnowwolf/lede)的源码,之前有考虑并尝试过原版[openwrt](https://github.com/openwrt/openwrt)源码的,后面发现原版源码的开源无线驱动没有LEDE的鸡血无线驱动强,因此换成了LEDE的源码.   
+> Sidecar用于旁路由，挂梯子，精简了比较多的模块，比如PPP拨号模块等等,源码同样用的原版[openwrt](https://github.com/openwrt/openwrt)源码。  
+> N1跟Sidecar的功能差不多,不过打包使用的是LEDE的源码,主要我是用N1来做无线桥接的,需要用无线来桥接其它网络,用原版openwrt源码发现WIFI不稳,老是断联,因此才换成LEDE的源码,无线桥接算是稳定了,后期再尝试原版源码了。
    
 
 ### 改动如下：
