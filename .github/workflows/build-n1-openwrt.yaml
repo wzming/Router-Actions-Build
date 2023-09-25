@@ -92,8 +92,9 @@ jobs:
     - name: Download package
       run: |
         cd openwrt
+        cat include/kernel-5.15
         make defconfig
-        make download -j8
+        make download V=s -j8
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
 
