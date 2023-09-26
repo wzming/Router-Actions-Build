@@ -122,6 +122,9 @@ sed -i 's/luci-theme-bootstrap/luci-theme-argon/g'  package/feeds/luci/luci-ligh
 sed -i 's/luci-theme-bootstrap/luci-theme-argon/g'  package/feeds/luci/luci-nginx/Makefile
 sed -i 's/luci-theme-bootstrap/luci-theme-argon/g'  package/feeds/luci/luci-ssl-nginx/Makefile
 
+#去除nginx依赖
+sed -i 's/DEPENDS += +nginx/DEPENDS += /g'  package/feeds/packages/ariang/Makefile
+
 
 
 
