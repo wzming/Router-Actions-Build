@@ -55,10 +55,10 @@ cd /workdir/openwrt
 #argon
 git clone --depth 1 https://github.com/jerrykuku/luci-theme-argon.git package/luci-theme-argon
 #pushbot
-git clone --depth 1 https://github.com/zzsj0928/luci-app-pushbot package/luci-app-pushbot
-#golang
-rm -rf feeds/packages/lang/golang
-svn co https://github.com/openwrt/packages/branches/openwrt-23.05/lang/golang feeds/packages/lang/golang
+#git clone --depth 1 https://github.com/zzsj0928/luci-app-pushbot package/luci-app-pushbot
+#golang 如果是用的 master 分支,就需要
+#rm -rf feeds/packages/lang/golang
+#svn co https://github.com/openwrt/packages/branches/openwrt-23.05/lang/golang feeds/packages/lang/golang
 
 #去除uhttpd
 sed -i 's/+uhttpd-mod-ubus//g' package/feeds/luci/luci-light/Makefile
