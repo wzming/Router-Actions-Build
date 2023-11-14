@@ -207,7 +207,9 @@ jobs:
     - name: Delete workflow runs
       uses: Mattraks/delete-workflow-runs@main
       with:
-        keep_minimum_runs: 7
+        retain_days: 7 # 指定天数
+        keep_minimum_runs: 3 # 至少保留的运行记录数量
+        delete_run_by_conclusion_pattern: 'failure'
 
     - name: Remove old Releases
       uses: dev-drprasad/delete-older-releases@v0.2.1
