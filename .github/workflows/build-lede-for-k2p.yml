@@ -104,15 +104,6 @@ jobs:
         ls package/
         df -hT $PWD
 
-    - name: Download package
-      id: package
-      run: |
-        cd openwrt
-        make defconfig
-        make download -j8
-        find dl -size -1024c -exec ls -l {} \;
-        find dl -size -1024c -exec rm -f {} \;
-
     - name: Install SSH Key
       if: env.INIT_CUSTOM_CONFIG == 'true'
       uses: shimataro/ssh-key-action@v2
@@ -128,7 +119,16 @@ jobs:
         mkdir -p /workdir/openwrt/files
         mv etc /workdir/openwrt/files/
         mv root /workdir/openwrt/files/
-        cat /workdir/openwrt/files/etc/sysctl.conf
+        tree /workdir/openwrt/files
+
+    - name: Download package
+      id: package
+      run: |
+        cd openwrt
+        make defconfig
+        make download -j8
+        find dl -size -1024c -exec ls -l {} \;
+        find dl -size -1024c -exec rm -f {} \;
 
     - name: Compile the firmware
       id: compile
