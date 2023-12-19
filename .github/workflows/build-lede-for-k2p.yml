@@ -155,7 +155,8 @@ jobs:
       run: |
         cd openwrt/bin/targets/*/*
         rm -rf packages
-        find . -type f -name '*sysupgrade*' -exec zip -e -P ${{secrets.ENCRYPTED_PASSWD}} archive.zip {} +
+        find . -type f -name '*sysupgrade*' -exec 7z a -t7z -p${{secrets.ENCRYPTED_PASSWD}} -mhe=on -mx=9 -mmt=on -aoa openwrt-k2p-sysupgrade.7z {} +
+#        7z a -t7z -p${{secrets.ENCRYPTED_PASSWD}} -mhe=on -mx=9 -mmt=on -aoa openwrt-x86-64-generic-squashfs-combined-efi.7z openwrt-x86-64-generic-squashfs-combined-efi.img.gz
         find . -type f -name '*bin*' -exec rm -rf {} \;
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
         echo "status=success" >> $GITHUB_OUTPUT
