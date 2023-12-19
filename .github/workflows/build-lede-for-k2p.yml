@@ -126,6 +126,7 @@ jobs:
         mkdir -p /workdir/openwrt/files
         mv etc /workdir/openwrt/files/
         mv root /workdir/openwrt/files/
+        cat /workdir/openwrt/files/etc/sysctl.conf
 
     - name: Compile the firmware
       id: compile
