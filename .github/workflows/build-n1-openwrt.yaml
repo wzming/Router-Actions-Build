@@ -148,7 +148,7 @@ jobs:
       if: env.UPLOAD_FIRMWARE == 'true' && !cancelled()
       run: |
         cd ${{ env.PACKAGED_OUTPUTPATH }}
-        find . -type f -name '*img*' -exec zip -e -P ${{secrets.ENCRYPTED_PASSWD}} archive.zip {} +
+        find . -type f -name '*img*' -exec 7z a -t7z -p'${{secrets.ENCRYPTED_PASSWD}}' -mhe=on -mx=9 -mmt=on -aoa openwrt-n1.7z {} \;
         find . -type f -name '*gz*' -exec rm -rf {} \;
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
         echo "status=success" >> $GITHUB_OUTPUT
