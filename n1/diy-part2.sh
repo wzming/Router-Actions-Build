@@ -32,12 +32,12 @@ echo -e "$core_latest_ver" > "package/unblockneteasemusic/root/usr/share/unblock
 
 
 # 删除老版本watchcat
-rm -rf feeds/packages/utils/watchcat
-svn co https://github.com/openwrt/packages/trunk/utils/watchcat feeds/packages/utils/watchcat
-
-git clone --depth 1 https://github.com/gngpp/luci-app-watchcat-plus.git package/luci-app-watchcat-plus
-
-
+#rm -rf feeds/packages/utils/watchcat
+#svn co https://github.com/openwrt/packages/trunk/utils/watchcat feeds/packages/utils/watchcat
+#
+#git clone --depth 1 https://github.com/gngpp/luci-app-watchcat-plus.git package/luci-app-watchcat-plus
+#
+#
 
 
 

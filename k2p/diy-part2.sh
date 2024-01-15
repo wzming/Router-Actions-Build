@@ -5,9 +5,9 @@
 #sed -i 's/+luci-theme-bootstrap //g' /workdir/openwrt/feeds/luci/collections/luci-nginx/Makefile
 #sed -i 's/+luci-theme-bootstrap //g' /workdir/openwrt/feeds/luci/collections/luci-ssl-nginx/Makefile
 
-cd /workdir/openwrt
+#cd /workdir/openwrt
 # 删除老版本watchcat
-rm -rf feeds/packages/utils/watchcat
-svn co https://github.com/openwrt/packages/trunk/utils/watchcat feeds/packages/utils/watchcat
-
-git clone --depth 1 https://github.com/gngpp/luci-app-watchcat-plus.git package/luci-app-watchcat-plus
+#rm -rf feeds/packages/utils/watchcat
+#svn co https://github.com/openwrt/packages/trunk/utils/watchcat feeds/packages/utils/watchcat
+#
+#git clone --depth 1 https://github.com/gngpp/luci-app-watchcat-plus.git package/luci-app-watchcat-plus
