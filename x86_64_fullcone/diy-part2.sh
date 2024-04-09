@@ -78,7 +78,7 @@ rm -rf feeds/packages/net/v2ray-geodata
 git clone --depth 1 https://github.com/sbwml/v2ray-geodata package/v2ray-geodata
 git clone --depth 1 https://github.com/sbwml/luci-app-mosdns --single-branch -b v5 package/mosdns
 #qbittorrent
-git clone --depth 1 https://github.com/sbwml/openwrt-qBittorrent package/qBittorrent
+#git clone --depth 1 https://github.com/sbwml/openwrt-qBittorrent package/qBittorrent
 #alist
 git clone --depth 1 https://github.com/sbwml/luci-app-alist package/alist
 #OAF
