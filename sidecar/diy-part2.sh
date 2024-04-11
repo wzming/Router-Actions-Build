@@ -60,6 +60,9 @@ git clone --depth 1 https://github.com/jerrykuku/luci-theme-argon.git package/lu
 #rm -rf feeds/packages/lang/golang
 #svn co https://github.com/openwrt/packages/branches/openwrt-23.05/lang/golang feeds/packages/lang/golang
 
+rm -rf feeds/packages/lang/golang
+git clone https://github.com/sbwml/packages_lang_golang -b 22.x feeds/packages/lang/golang
+
 #去除uhttpd
 sed -i 's/+uhttpd-mod-ubus//g' package/feeds/luci/luci-light/Makefile
 sed -i 's/+uhttpd \\//g' package/feeds/luci/luci-light/Makefile
