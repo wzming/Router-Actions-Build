@@ -103,13 +103,13 @@ for file in $(wget -qO- "https://api.github.com/repos/UnblockNeteaseMusic/server
 			echo -e "Failed to download ${file##*/}." >> "$LOG"
 		}
 	done
-for cert in "ca.crt" "server.crt" "server.key"
-	do
-		wget "https://fastly.jsdelivr.net/gh/UnblockNeteaseMusic/server@$core_latest_ver/$cert" -qO "package/unblockneteasemusic/root/usr/share/unblockneteasemusic/core/$cert"
-		[ -s "package/unblockneteasemusic/root/usr/share/unblockneteasemusic/core/${cert}" ] || {
-			echo -e "Failed to download ${cert}." >> "$LOG"
-		}
-	done
+#for cert in "ca.crt" "server.crt" "server.key"
+#	do
+#		wget "https://fastly.jsdelivr.net/gh/UnblockNeteaseMusic/server@$core_latest_ver/$cert" -qO "package/unblockneteasemusic/root/usr/share/unblockneteasemusic/core/$cert"
+#		[ -s "package/unblockneteasemusic/root/usr/share/unblockneteasemusic/core/${cert}" ] || {
+#			echo -e "Failed to download ${cert}." >> "$LOG"
+#		}
+#	done
 echo -e "$core_latest_ver" > "package/unblockneteasemusic/root/usr/share/unblockneteasemusic/core_local_ver"
 tree package/unblockneteasemusic/root/usr/share/unblockneteasemusic
 
