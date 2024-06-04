@@ -8,7 +8,7 @@
 # Description: Build OpenWrt using GitHub Actions
 #
 
-name: OpenWrt SNAPSHOT with Fullcone
+name: OpenWrt 23.05 with Fullcone
 
 on:
   push:
@@ -25,17 +25,17 @@ on:
 
 env:
   REPO_URL: https://github.com/openwrt/openwrt.git
-  REPO_BRANCH: main
+  REPO_BRANCH: openwrt-23.05
   FEEDS_CONF: x86_64_fullcone/feeds.conf.default
   CONFIG_FILE: x86_64_fullcone/.config
   DIY_P1_SH: x86_64_fullcone/diy-part1.sh
   DIY_P2_SH: x86_64_fullcone/diy-part2.sh
   FULLCONE_SH: x86_64_fullcone/fullcone.sh
   CONFIG_SH: x86_64_fullcone/config.sh
-  ADD_FULLCONE: true
+  ADD_FULLCONE: false
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
-  UPLOAD_RELEASE: true
+  UPLOAD_RELEASE: false
   TZ: Asia/Shanghai
   INIT_CUSTOM_CONFIG: true
   FULLCONE_PATCH_PATH: x86_64_fullcone/luci-app-firewall-fullcone.patch
@@ -76,7 +76,7 @@ jobs:
         sudo apt -y autoremove --purge
         sudo apt clean
         sudo -E apt update -y
-        sudo apt install -y tree jq tzdata ack antlr3 asciidoc autoconf automake autopoint binutils bison build-essential libfuse-dev  bzip2 ccache cmake cpio curl device-tree-compiler fastjar flex gawk gettext gcc-multilib g++-multilib   git gperf haveged help2man intltool libc6-dev-i386 libelf-dev libglib2.0-dev libgmp3-dev libltdl-dev   libmpc-dev libmpfr-dev libncurses5-dev libncursesw5-dev libreadline-dev libssl-dev libtool lrzsz   mkisofs msmtp nano ninja-build p7zip p7zip-full patch pkgconf python2.7 python3 python3-pyelftools   libpython3-dev qemu-utils rsync scons squashfs-tools subversion swig texinfo uglifyjs upx-ucl unzip   vim wget xmlto xxd zlib1g-dev
+        sudo apt install -y ack antlr3 asciidoc autoconf automake autopoint binutils bison build-essential libfuse-dev  bzip2 ccache cmake cpio curl device-tree-compiler fastjar flex gawk gettext gcc-multilib g++-multilib   git gperf haveged help2man intltool libc6-dev-i386 libelf-dev libglib2.0-dev libgmp3-dev libltdl-dev   libmpc-dev libmpfr-dev libncurses5-dev libncursesw5-dev libreadline-dev libssl-dev libtool lrzsz   mkisofs msmtp nano ninja-build p7zip p7zip-full patch pkgconf python2.7 python3 python3-pyelftools   libpython3-dev qemu-utils rsync scons squashfs-tools subversion swig texinfo uglifyjs upx-ucl unzip   vim wget xmlto xxd zlib1g-dev
         sudo cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
         sudo timedatectl set-timezone "$TZ"
         sudo mkdir -p /workdir
@@ -183,7 +183,7 @@ jobs:
       uses: actions/upload-artifact@main
       if: steps.organize.outputs.status == 'success' && !cancelled()
       with:
-        name: OpenWrt_x86_64_fullcone_firmware${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
+        name: OpenWrt23.05_firmware${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
         path: ${{ env.FIRMWARE }}
 
     - name: Generate release tag
@@ -192,7 +192,8 @@ jobs:
       run: |
         echo "release_tag=$(date +"%Y.%m.%d-%H%M")" >> $GITHUB_OUTPUT
         touch release.txt
-        echo "用来查看版本差异的" >> release.txt
+        [ $UPLOAD_COWTRANSFER = true ] && echo "🔗 [Cowtransfer](${{ steps.cowtransfer.outputs.url }})" >> release.txt
+        [ $UPLOAD_WETRANSFER = true ] && echo "🔗 [WeTransfer](${{ steps.wetransfer.outputs.url }})" >> release.txt
         echo "status=success" >> $GITHUB_OUTPUT
 
     - name: Upload firmware to release
@@ -203,14 +204,13 @@ jobs:
       with:
         tag_name: ${{ steps.tag.outputs.release_tag }}
         body_path: release.txt
-        files: ${{ env.FIRMWARE }}/openwrt-x86-64-generic.manifest
+        files: ${{ env.FIRMWARE }}/*
 
     - name: Delete workflow runs
       uses: Mattraks/delete-workflow-runs@main
       with:
-        retain_days: 7 # 指定天数
-        keep_minimum_runs: 3 # 至少保留的运行记录数量
-        delete_run_by_conclusion_pattern: 'failure'
+        retain_days: 1
+        keep_minimum_runs: 1
 
     - name: Remove old Releases
       uses: dev-drprasad/delete-older-releases@v0.3.3
