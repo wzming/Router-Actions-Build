@@ -50,37 +50,15 @@ chmod +x ./clash* ; rm -rf ./*.gz
 
 cd /workdir/OpenClash
 cp -r luci-app-openclash /workdir/openwrt/package/
-#aliyundrive-webdav
-cd /workdir
-git clone --depth 1 https://github.com/messense/aliyundrive-webdav.git
-cd aliyundrive-webdav/
-cp -r openwrt /workdir/openwrt/package/aliyundrive-webdav
-#luci-app-zerotier
-#cd /workdir
-#git clone --depth 1 https://github.com/immortalwrt/luci.git immortalwrt-luci
-#cd immortalwrt-luci/applications/
-#cp -r luci-app-zerotier /workdir/openwrt/package/
-#sed -i 's/include ..\/..\/luci.mk/include $(TOPDIR)\/feeds\/luci\/luci.mk/g' /workdir/openwrt/package/luci-app-zerotier/Makefile
 
-
-#arpbind & autoreboot
-#cd /workdir
-#git clone --depth 1 https://github.com/coolsnowwolf/luci.git lede-luci
-#cd lede-luci/applications/
-#cp -r luci-app-arpbind /workdir/openwrt/package/
-#cp -r luci-app-autoreboot /workdir/openwrt/package/
-#sed -i 's/include ..\/..\/luci.mk/include $(TOPDIR)\/feeds\/luci\/luci.mk/g' /workdir/openwrt/package/luci-app-arpbind/Makefile
-#sed -i 's/include ..\/..\/luci.mk/include $(TOPDIR)\/feeds\/luci\/luci.mk/g' /workdir/openwrt/package/luci-app-autoreboot/Makefile
-#sed -i 's/LUCI_DEPENDS:=+luci/LUCI_DEPENDS:=/g' /workdir/openwrt/package/luci-app-autoreboot/Makefile
 cd /workdir/openwrt
 #mosdns
 rm -rf feeds/packages/net/v2ray-geodata
+rm -rf feeds/packages/lang/golang
+git clone --depth 1 https://github.com/sbwml/packages_lang_golang -b 23.x feeds/packages/lang/golang
 git clone --depth 1 https://github.com/sbwml/v2ray-geodata package/v2ray-geodata
 git clone --depth 1 https://github.com/sbwml/luci-app-mosdns --single-branch -b v5 package/mosdns
-#qbittorrent
-git clone --depth 1 https://github.com/sbwml/openwrt-qBittorrent package/qBittorrent
-#alist
-git clone --depth 1 https://github.com/sbwml/luci-app-alist package/alist
+
 #OAF
 #git clone --depth 1 https://github.com/destan19/OpenAppFilter.git package/OpenAppFilter
 #vlmcsd

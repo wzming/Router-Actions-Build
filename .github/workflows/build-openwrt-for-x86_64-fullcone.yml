@@ -170,6 +170,7 @@ jobs:
       if: env.UPLOAD_FIRMWARE == 'true' && !cancelled()
       run: |
         cd openwrt/bin/targets/*/*
+        ls 
         rm -rf packages
         rm -rf *.bin
         cp /workdir/openwrt/.config .
