@@ -8,7 +8,7 @@
 # Description: Build OpenWrt using GitHub Actions
 #
 
-name: OpenWrt 23.05 with SNAPSHOT
+name: OpenWrt 23.05 SNAPSHOT
 
 on:
   push:

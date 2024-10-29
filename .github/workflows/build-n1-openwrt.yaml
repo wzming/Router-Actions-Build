@@ -6,8 +6,8 @@ on:
       - 'n1/.config'
       - 'n1/diy-part1.sh'
       - 'n1/diy-part2.sh'
-  schedule:
-    - cron: 0 16 * * *
+  #schedule:
+    #- cron: 0 16 * * *
   workflow_dispatch:
 env:
   REPO_URL: https://github.com/coolsnowwolf/lede.git
