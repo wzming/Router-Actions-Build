@@ -58,6 +58,8 @@ cp -r openwrt /workdir/openwrt/package/aliyundrive-webdav
 
 cd /workdir/openwrt
 #mosdns
+rm -rf feeds/packages/lang/golang
+git clone https://github.com/sbwml/packages_lang_golang -b 23.x feeds/packages/lang/golang
 rm -rf feeds/packages/net/v2ray-geodata
 git clone --depth 1 https://github.com/sbwml/v2ray-geodata package/v2ray-geodata
 git clone --depth 1 https://github.com/sbwml/luci-app-mosdns --single-branch -b v5 package/mosdns
@@ -103,6 +105,8 @@ sed -i 's/luci-theme-bootstrap/luci-theme-argon/g'  package/feeds/luci/luci-ssl-
 
 #去除nginx依赖
 sed -i 's/DEPENDS += +nginx/DEPENDS += /g'  package/feeds/packages/ariang/Makefile
+#fros
+sed -i 's/+luci //; s/+uhttpd//' package/feeds/fros/fros-apps/Makefile
 
 
 
