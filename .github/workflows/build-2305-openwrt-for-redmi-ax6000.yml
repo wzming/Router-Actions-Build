@@ -8,16 +8,15 @@
 # Description: Build OpenWrt using GitHub Actions
 #
 
-name: OpenWrt SNAPSHOT with Fullcone
+name: Build AX6000 OpenWrt23.05
 
 on:
   push:
     paths:
-      - 'x86_64_fullcone/.config'
-      - 'x86_64_fullcone/config.sh'
-      - 'x86_64_fullcone/diy-part1.sh'
-      - 'x86_64_fullcone/diy-part2.sh'
-      - 'x86_64_fullcone/fullcone.sh'
+      - 'ax6000/.config'
+      - 'ax6000/config.sh'
+      - 'ax6000/diy-part1.sh'
+      - 'ax6000/diy-part2.sh'
   workflow_dispatch:
   #schedule:
     #UTC时间，比北京时间慢8个小时
@@ -25,20 +24,17 @@ on:
 
 env:
   REPO_URL: https://github.com/openwrt/openwrt.git
-  REPO_BRANCH: main
-  FEEDS_CONF: x86_64_fullcone/feeds.conf.default
-  CONFIG_FILE: x86_64_fullcone/.config
-  DIY_P1_SH: x86_64_fullcone/diy-part1.sh
-  DIY_P2_SH: x86_64_fullcone/diy-part2.sh
-  FULLCONE_SH: x86_64_fullcone/fullcone.sh
-  CONFIG_SH: x86_64_fullcone/config.sh
-  ADD_FULLCONE: true
+  REPO_BRANCH: openwrt-23.05
+  FEEDS_CONF: ax6000/feeds.conf.default
+  CONFIG_FILE: ax6000/.config
+  DIY_P1_SH: ax6000/diy-part1.sh
+  DIY_P2_SH: ax6000/diy-part2.sh
+  CONFIG_SH: ax6000/config.sh
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
   UPLOAD_RELEASE: true
   TZ: Asia/Shanghai
   INIT_CUSTOM_CONFIG: true
-  FULLCONE_PATCH_PATH: x86_64_fullcone/luci-app-firewall-fullcone.patch
 
 jobs:
   build:
@@ -125,15 +121,6 @@ jobs:
         chmod +x $CONFIG_SH
         $GITHUB_WORKSPACE/$CONFIG_SH ${{secrets.PULL_SETTING_REPO_URL}}
 
-    - name: Append Fullcone Nat depend
-      if: env.ADD_FULLCONE == 'true'
-      run: |
-        chmod +x $FULLCONE_SH
-        cd openwrt
-        $GITHUB_WORKSPACE/$FULLCONE_SH
-        cd feeds/luci
-        git diff applications/luci-app-firewall/htdocs/luci-static/resources/view/firewall/zones.js
-
     - name: Download package
       id: package
       run: |
@@ -170,13 +157,10 @@ jobs:
       if: env.UPLOAD_FIRMWARE == 'true' && !cancelled()
       run: |
         cd openwrt/bin/targets/*/*
-        ls 
         rm -rf packages
-        rm -rf *.bin
-        cp /workdir/openwrt/.config .
-        7z a -t7z -p'${{secrets.ENCRYPTED_PASSWD}}' -mhe=on -mx=9 -mmt=on -aoa openwrt-x86-64-generic-squashfs-combined-efi.7z openwrt-x86-64-generic-squashfs-combined-efi.img.gz
-        rm -rf *.gz
-        find . -type f -name '*rootfs*' -exec rm -rf {} \;
+        find . -type f -name '*sysupgrade*' -exec 7z a -t7z -p'${{secrets.ENCRYPTED_PASSWD}}' -mhe=on -mx=9 -mmt=on -aoa openwrt-ax6000-sysupgrade.7z {} \;
+        find . -type f -name '*initramfs*' -exec rm -rf {} \;
+        find . -type f -name '*bin*' -exec rm -rf {} \;
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
         echo "status=success" >> $GITHUB_OUTPUT
 
@@ -184,7 +168,7 @@ jobs:
       uses: actions/upload-artifact@main
       if: steps.organize.outputs.status == 'success' && !cancelled()
       with:
-        name: OpenWrt_x86_64_fullcone_firmware${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
+        name: OpenWrt_ax6000_firmware${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
         path: ${{ env.FIRMWARE }}
 
     - name: Generate release tag
@@ -204,7 +188,7 @@ jobs:
       with:
         tag_name: ${{ steps.tag.outputs.release_tag }}
         body_path: release.txt
-        files: ${{ env.FIRMWARE }}/openwrt-x86-64-generic.manifest
+        files: ${{ env.FIRMWARE }}/openwrt-mediatek-filogic-xiaomi_redmi-router-ax6000-stock.manifest
 
     - name: Delete workflow runs
       uses: Mattraks/delete-workflow-runs@main

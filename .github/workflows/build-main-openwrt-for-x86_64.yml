@@ -8,37 +8,33 @@
 # Description: Build OpenWrt using GitHub Actions
 #
 
-name: OpenWrt 23.05 with Fullcone
+name: Build OpenWrt Main SNAPSHOT
 
 on:
   push:
     paths:
-      - 'x86_64_fullcone/.config'
-      - 'x86_64_fullcone/config.sh'
-      - 'x86_64_fullcone/diy-part1.sh'
-      - 'x86_64_fullcone/diy-part2.sh'
-      - 'x86_64_fullcone/fullcone.sh'
+      - 'branch_main/.config'
+      - 'branch_main/config.sh'
+      - 'branch_main/diy-part1.sh'
+      - 'branch_main/diy-part2.sh'
   workflow_dispatch:
-  #schedule:
+  schedule:
     #UTC时间，比北京时间慢8个小时
-    #- cron: '0 16 * * *'  # 16+8=24，相当于北京时间24点
+    - cron: '0 16 * * *'  # 16+8=24，相当于北京时间24点
 
 env:
   REPO_URL: https://github.com/openwrt/openwrt.git
-  REPO_BRANCH: openwrt-23.05
-  FEEDS_CONF: x86_64_fullcone/feeds.conf.default
-  CONFIG_FILE: x86_64_fullcone/.config
-  DIY_P1_SH: x86_64_fullcone/diy-part1.sh
-  DIY_P2_SH: x86_64_fullcone/diy-part2.sh
-  FULLCONE_SH: x86_64_fullcone/fullcone.sh
-  CONFIG_SH: x86_64_fullcone/config.sh
-  ADD_FULLCONE: true
+  REPO_BRANCH: main
+  FEEDS_CONF: branch_main/feeds.conf.default
+  CONFIG_FILE: branch_main/.config
+  DIY_P1_SH: branch_main/diy-part1.sh
+  DIY_P2_SH: branch_main/diy-part2.sh
+  CONFIG_SH: branch_main/config.sh
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
   UPLOAD_RELEASE: false
   TZ: Asia/Shanghai
   INIT_CUSTOM_CONFIG: true
-  FULLCONE_PATCH_PATH: x86_64_fullcone/luci-app-firewall-fullcone.patch
 
 jobs:
   build:
@@ -76,7 +72,7 @@ jobs:
         sudo apt -y autoremove --purge
         sudo apt clean
         sudo -E apt update -y
-        sudo apt install -y ack antlr3 asciidoc autoconf automake autopoint binutils bison build-essential libfuse-dev  bzip2 ccache cmake cpio curl device-tree-compiler fastjar flex gawk gettext gcc-multilib g++-multilib   git gperf haveged help2man intltool libc6-dev-i386 libelf-dev libglib2.0-dev libgmp3-dev libltdl-dev   libmpc-dev libmpfr-dev libncurses5-dev libncursesw5-dev libreadline-dev libssl-dev libtool lrzsz   mkisofs msmtp nano ninja-build p7zip p7zip-full patch pkgconf python2.7 python3 python3-pyelftools   libpython3-dev qemu-utils rsync scons squashfs-tools subversion swig texinfo uglifyjs upx-ucl unzip   vim wget xmlto xxd zlib1g-dev
+        sudo apt install -y tree jq tzdata ack antlr3 asciidoc autoconf automake autopoint binutils bison build-essential libfuse-dev  bzip2 ccache cmake cpio curl device-tree-compiler fastjar flex gawk gettext gcc-multilib g++-multilib   git gperf haveged help2man intltool libc6-dev-i386 libelf-dev libglib2.0-dev libgmp3-dev libltdl-dev   libmpc-dev libmpfr-dev libncurses5-dev libncursesw5-dev libreadline-dev libssl-dev libtool lrzsz   mkisofs msmtp nano ninja-build p7zip p7zip-full patch pkgconf python2.7 python3 python3-pyelftools   libpython3-dev qemu-utils rsync scons squashfs-tools subversion swig texinfo uglifyjs upx-ucl unzip   vim wget xmlto xxd zlib1g-dev
         sudo cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
         sudo timedatectl set-timezone "$TZ"
         sudo mkdir -p /workdir
@@ -124,15 +120,6 @@ jobs:
       run: |
         chmod +x $CONFIG_SH
         $GITHUB_WORKSPACE/$CONFIG_SH ${{secrets.PULL_SETTING_REPO_URL}}
-
-    - name: Append Fullcone Nat depend
-      if: env.ADD_FULLCONE == 'true'
-      run: |
-        chmod +x $FULLCONE_SH
-        cd openwrt
-        $GITHUB_WORKSPACE/$FULLCONE_SH
-        cd feeds/luci
-        git diff applications/luci-app-firewall/htdocs/luci-static/resources/view/firewall/zones.js
 
     - name: Download package
       id: package
@@ -183,7 +170,7 @@ jobs:
       uses: actions/upload-artifact@main
       if: steps.organize.outputs.status == 'success' && !cancelled()
       with:
-        name: OpenWrt23.05_firmware${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
+        name: OpenWrt_x86_64_firmware${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
         path: ${{ env.FIRMWARE }}
 
     - name: Generate release tag
