@@ -101,12 +101,9 @@ sed -i 's/+rpcd-mod-rrdns \\/+rpcd-mod-rrdns/g'  package/feeds/luci/luci-light/M
 #替换默认主题
 sed -i 's/luci-theme-bootstrap/luci-theme-argon/g'  package/feeds/luci/luci-light/Makefile
 sed -i 's/luci-theme-bootstrap/luci-theme-argon/g'  package/feeds/luci/luci-nginx/Makefile
-sed -i 's/luci-theme-bootstrap/luci-theme-argon/g'  package/feeds/luci/luci-ssl-nginx/Makefile
 
 #去除nginx依赖
 sed -i 's/DEPENDS += +nginx/DEPENDS += /g'  package/feeds/packages/ariang/Makefile
-#fros
-sed -i 's/+luci //; s/+uhttpd//' package/feeds/fros/fros-apps/Makefile
 
 
 
