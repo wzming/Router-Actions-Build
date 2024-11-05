@@ -18,9 +18,9 @@ on:
       - 'branch_2305/diy-part1.sh'
       - 'branch_2305/diy-part2.sh'
   workflow_dispatch:
-  schedule:
+  #schedule:
     #UTC时间，比北京时间慢8个小时
-    - cron: '0 16 * * *'  # 16+8=24，相当于北京时间24点
+    #- cron: '0 16 * * *'  # 16+8=24，相当于北京时间24点
 
 env:
   REPO_URL: https://github.com/openwrt/openwrt.git
