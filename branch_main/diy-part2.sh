@@ -51,10 +51,10 @@ chmod +x ./clash* ; rm -rf ./*.gz
 cd /workdir/OpenClash
 cp -r luci-app-openclash /workdir/openwrt/package/
 #aliyundrive-webdav
-cd /workdir
-git clone --depth 1 https://github.com/messense/aliyundrive-webdav.git
-cd aliyundrive-webdav/
-cp -r openwrt /workdir/openwrt/package/aliyundrive-webdav
+#cd /workdir
+#git clone --depth 1 https://github.com/messense/aliyundrive-webdav.git
+#cd aliyundrive-webdav/
+#cp -r openwrt /workdir/openwrt/package/aliyundrive-webdav
 
 cd /workdir/openwrt
 #mosdns
@@ -95,15 +95,15 @@ echo -e "$core_latest_ver" > "package/unblockneteasemusic/root/usr/share/unblock
 tree package/unblockneteasemusic/root/usr/share/unblockneteasemusic
 
 #去除uhttpd
-sed -i 's/+uhttpd-mod-ubus//g' package/feeds/luci/luci-light/Makefile
-sed -i 's/+uhttpd \\//g' package/feeds/luci/luci-light/Makefile
-sed -i 's/+rpcd-mod-rrdns \\/+rpcd-mod-rrdns/g'  package/feeds/luci/luci-light/Makefile
+#sed -i 's/+uhttpd-mod-ubus//g' package/feeds/luci/luci-light/Makefile
+#sed -i 's/+uhttpd \\//g' package/feeds/luci/luci-light/Makefile
+#sed -i 's/+rpcd-mod-rrdns \\/+rpcd-mod-rrdns/g'  package/feeds/luci/luci-light/Makefile
 #替换默认主题
-sed -i 's/luci-theme-bootstrap/luci-theme-argon/g'  package/feeds/luci/luci-light/Makefile
-sed -i 's/luci-theme-bootstrap/luci-theme-argon/g'  package/feeds/luci/luci-nginx/Makefile
+#sed -i 's/luci-theme-bootstrap/luci-theme-argon/g'  package/feeds/luci/luci-light/Makefile
+#sed -i 's/luci-theme-bootstrap/luci-theme-argon/g'  package/feeds/luci/luci-nginx/Makefile
 
 #去除nginx依赖
-sed -i 's/DEPENDS += +nginx/DEPENDS += /g'  package/feeds/packages/ariang/Makefile
+#sed -i 's/DEPENDS += +nginx/DEPENDS += /g'  package/feeds/packages/ariang/Makefile
 
 
 
