@@ -95,9 +95,10 @@ echo -e "$core_latest_ver" > "package/unblockneteasemusic/root/usr/share/unblock
 tree package/unblockneteasemusic/root/usr/share/unblockneteasemusic
 
 #去除uhttpd
-#sed -i 's/+uhttpd-mod-ubus//g' package/feeds/luci/luci-light/Makefile
-#sed -i 's/+uhttpd \\//g' package/feeds/luci/luci-light/Makefile
-#sed -i 's/+rpcd-mod-rrdns \\/+rpcd-mod-rrdns/g'  package/feeds/luci/luci-light/Makefile
+sed -i 's/+uhttpd-mod-ubus//g' package/feeds/luci/luci-light/Makefile
+sed -i 's/+uhttpd \\//g' package/feeds/luci/luci-light/Makefile
+sed -i 's/+rpcd-mod-rrdns \\/+rpcd-mod-rrdns/g'  package/feeds/luci/luci-light/Makefile
+sed 's/+luci-light //g' package/feeds/luci/luci-ssl/Makefile
 #替换默认主题
 #sed -i 's/luci-theme-bootstrap/luci-theme-argon/g'  package/feeds/luci/luci-light/Makefile
 #sed -i 's/luci-theme-bootstrap/luci-theme-argon/g'  package/feeds/luci/luci-nginx/Makefile
