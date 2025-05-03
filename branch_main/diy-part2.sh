@@ -73,26 +73,26 @@ git clone --depth 1 https://github.com/jerrykuku/luci-app-argon-config.git packa
 #pushbot
 git clone --depth 1 https://github.com/zzsj0928/luci-app-pushbot package/luci-app-pushbot
 #unblockneteasemusic
-git clone --depth 1 https://github.com/UnblockNeteaseMusic/luci-app-unblockneteasemusic.git package/unblockneteasemusic
-mkdir -p package/unblockneteasemusic/root/usr/share/unblockneteasemusic/core
+#git clone --depth 1 https://github.com/UnblockNeteaseMusic/luci-app-unblockneteasemusic.git package/unblockneteasemusic
+#mkdir -p package/unblockneteasemusic/root/usr/share/unblockneteasemusic/core
 
-export core_latest_ver="$(wget -qO- 'https://api.github.com/repos/UnblockNeteaseMusic/server/commits?sha=enhanced&path=precompiled' | jq -r '.[0].sha')"
-for file in $(wget -qO- "https://api.github.com/repos/UnblockNeteaseMusic/server/contents/precompiled" | jq -r '.[].path')
-	do
-		wget "https://fastly.jsdelivr.net/gh/UnblockNeteaseMusic/server@$core_latest_ver/$file" -qO "package/unblockneteasemusic/root/usr/share/unblockneteasemusic/core/${file##*/}"
-		[ -s "package/unblockneteasemusic/root/usr/share/unblockneteasemusic/core/${file##*/}" ] || {
-			echo -e "Failed to download ${file##*/}." >> "$LOG"
-		}
-	done
-for cert in "ca.crt" "server.crt" "server.key"
-	do
-		wget "https://fastly.jsdelivr.net/gh/UnblockNeteaseMusic/server@$core_latest_ver/$cert" -qO "package/unblockneteasemusic/root/usr/share/unblockneteasemusic/core/$cert"
-		[ -s "package/unblockneteasemusic/root/usr/share/unblockneteasemusic/core/${cert}" ] || {
-			echo -e "Failed to download ${cert}." >> "$LOG"
-		}
-	done
-echo -e "$core_latest_ver" > "package/unblockneteasemusic/root/usr/share/unblockneteasemusic/core_local_ver"
-tree package/unblockneteasemusic/root/usr/share/unblockneteasemusic
+#export core_latest_ver="$(wget -qO- 'https://api.github.com/repos/UnblockNeteaseMusic/server/commits?sha=enhanced&path=precompiled' | jq -r '.[0].sha')"
+#for file in $(wget -qO- "https://api.github.com/repos/UnblockNeteaseMusic/server/contents/precompiled" | jq -r '.[].path')
+#	do
+#		wget "https://fastly.jsdelivr.net/gh/UnblockNeteaseMusic/server@$core_latest_ver/$file" -qO "package/unblockneteasemusic/root/usr/share/unblockneteasemusic/core/${file##*/}"
+#		[ -s "package/unblockneteasemusic/root/usr/share/unblockneteasemusic/core/${file##*/}" ] || {
+#			echo -e "Failed to download ${file##*/}." >> "$LOG"
+#		}
+#	done
+#for cert in "ca.crt" "server.crt" "server.key"
+#	do
+#		wget "https://fastly.jsdelivr.net/gh/UnblockNeteaseMusic/server@$core_latest_ver/$cert" -qO "package/unblockneteasemusic/root/usr/share/unblockneteasemusic/core/$cert"
+#		[ -s "package/unblockneteasemusic/root/usr/share/unblockneteasemusic/core/${cert}" ] || {
+#			echo -e "Failed to download ${cert}." >> "$LOG"
+#		}
+#	done
+#echo -e "$core_latest_ver" > "package/unblockneteasemusic/root/usr/share/unblockneteasemusic/core_local_ver"
+#tree package/unblockneteasemusic/root/usr/share/unblockneteasemusic
 
 #去除uhttpd
 sed -i 's/+uhttpd-mod-ubus//g' package/feeds/luci/luci-light/Makefile
