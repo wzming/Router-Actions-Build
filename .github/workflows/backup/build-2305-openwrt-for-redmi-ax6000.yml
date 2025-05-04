@@ -13,10 +13,10 @@ name: Build AX6000 OpenWrt23.05
 on:
   push:
     paths:
-      - 'ax6000/.config'
-      - 'ax6000/config.sh'
-      - 'ax6000/diy-part1.sh'
-      - 'ax6000/diy-part2.sh'
+      - '../../../ax6000/.config'
+      - '../../../ax6000/config.sh'
+      - '../../../ax6000/diy-part1.sh'
+      - '../../../ax6000/diy-part2.sh'
   workflow_dispatch:
   #schedule:
     #UTC时间，比北京时间慢8个小时

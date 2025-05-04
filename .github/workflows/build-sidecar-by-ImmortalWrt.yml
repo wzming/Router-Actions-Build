@@ -8,7 +8,7 @@
 # Description: Build OpenWrt using GitHub Actions
 #
 
-name: OpenWrt23.05 For Sidecar
+name: ImmortalWrt For Sidecar
 
 on:
   push:
@@ -22,8 +22,8 @@ on:
     - cron: '0 16 * * *'  # 16+8=24，相当于北京时间24点
 
 env:
-  REPO_URL: https://github.com/openwrt/openwrt.git
-  REPO_BRANCH: openwrt-23.05
+  REPO_URL: https://github.com/immortalwrt/immortalwrt.git
+  REPO_BRANCH: master
   FEEDS_CONF: sidecar/feeds.conf.default
   CONFIG_FILE: sidecar/.config
   DIY_P1_SH: sidecar/diy-part1.sh
