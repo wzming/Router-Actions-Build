@@ -152,7 +152,7 @@ jobs:
           rm -rf packages
           rm -rf *.bin
           cp /workdir/openwrt/.config .
-          7z a -t7z -p'${{secrets.ENCRYPTED_PASSWD}}' -mhe=on -mx=9 -mmt=on -aoa openwrt-x86-64-generic-squashfs-combined-efi.7z openwrt-x86-64-generic-squashfs-combined-efi.img.gz
+          7z a -t7z -p'${{secrets.ENCRYPTED_PASSWD}}' -mhe=on -mx=9 -mmt=on -aoa immortalwrt-x86-64-generic-squashfs-combined-efi.7z immortalwrt-x86-64-generic-squashfs-combined-efi.img.gz
           rm -rf *.gz
           find . -type f -name '*rootfs*' -exec rm -rf {} \;
           echo "FIRMWARE=$PWD" >> $GITHUB_ENV
