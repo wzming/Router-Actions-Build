@@ -23,7 +23,7 @@ on:
 
 env:
   REPO_URL: https://github.com/LiBwrt/openwrt-6.x.git
-  REPO_BRANCH: kernel-6.12
+  REPO_BRANCH: k6.12-nss
   FEEDS_CONF: jdc_ax1800/feeds.conf.default
   CONFIG_FILE: jdc_ax1800/.config
   DIY_P1_SH: jdc_ax1800/diy-part1.sh
