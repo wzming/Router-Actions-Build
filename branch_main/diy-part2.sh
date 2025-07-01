@@ -105,6 +105,8 @@ sed -i 's/+luci-light //g' package/feeds/luci/luci-ssl/Makefile
 
 #去除nginx依赖
 #sed -i 's/DEPENDS += +nginx/DEPENDS += /g'  package/feeds/packages/ariang/Makefile
+# https://github.com/immortalwrt/packages/issues/1607
+sed -i 's/--set=llvm\.download-ci-llvm=true/--set=llvm.download-ci-llvm=false/' feeds/packages/lang/rust/Makefile
 
 
 
