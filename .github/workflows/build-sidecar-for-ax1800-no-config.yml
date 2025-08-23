@@ -8,7 +8,7 @@
 # Description: Build OpenWrt using GitHub Actions
 #
 
-name: JDC AX1800
+name: JDC AX1800 NO CONFIG
 
 on:
   push:
