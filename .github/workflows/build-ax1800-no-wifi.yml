@@ -8,14 +8,14 @@
 # Description: Build OpenWrt using GitHub Actions
 #
 
-name: JDC AX1800 NO CONFIG
+name: JDC AX1800 NO WIFI
 
 on:
   push:
     paths:
-      - 'jdc_ax1800/.config'
-      - 'jdc_ax1800/diy-part1.sh'
-      - 'jdc_ax1800/diy-part2.sh'
+      - 'jdc_ax1800_nowifi/.config'
+      - 'jdc_ax1800_nowifi/diy-part1.sh'
+      - 'jdc_ax1800_nowifi/diy-part2.sh'
   workflow_dispatch:
   schedule:
     #UTC时间，比北京时间慢8个小时
@@ -24,15 +24,15 @@ on:
 env:
   REPO_URL: https://github.com/LiBwrt/openwrt-6.x.git
   REPO_BRANCH: k6.12-nss
-  FEEDS_CONF: jdc_ax1800/feeds.conf.default
-  CONFIG_FILE: jdc_ax1800/.config
-  DIY_P1_SH: jdc_ax1800/diy-part1.sh
-  DIY_P2_SH: jdc_ax1800/diy-part2.sh
+  FEEDS_CONF: jdc_ax1800_nowifi/feeds.conf.default
+  CONFIG_FILE: jdc_ax1800_nowifi/.config
+  DIY_P1_SH: jdc_ax1800_nowifi/diy-part1.sh
+  DIY_P2_SH: jdc_ax1800_nowifi/diy-part2.sh
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
   UPLOAD_RELEASE: false
   TZ: Asia/Shanghai
-  INIT_CUSTOM_CONFIG: false
+  INIT_CUSTOM_CONFIG: true
 jobs:
   build:
     runs-on: ubuntu-latest
