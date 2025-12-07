@@ -1,4 +1,7 @@
 #!/bin/bash
+
+set -e
+
 cd /workdir/openwrt
 #OAF
 rm -rf feeds/packages/net/open-app-filter
