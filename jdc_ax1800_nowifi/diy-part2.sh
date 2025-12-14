@@ -17,7 +17,7 @@ export CORE_TUN=https://github.com/vernesong/OpenClash/raw/core/dev/premium/clas
 export CORE_DEV=https://github.com/vernesong/OpenClash/raw/core/dev/dev/clash-linux
 export CORE_MATE=https://github.com/vernesong/OpenClash/raw/core/dev/meta/clash-linux
 
-export CORE_TYPE=arm64
+export CORE_TYPE="arm64"
 export TUN_VER=$(curl -sfL $CORE_VER | sed -n "2{s/\r$//;p;q}")
 
 cd feeds/luci/applications/luci-app-openclash/root/etc/openclash
