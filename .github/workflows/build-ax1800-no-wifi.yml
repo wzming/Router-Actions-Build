@@ -149,6 +149,7 @@ jobs:
         if: env.UPLOAD_FIRMWARE == 'true' && !cancelled()
         run: |
           cd openwrt/bin/targets/*/*
+          cp /workdir/openwrt/.config .
           rm -rf packages
           find . -type f -name '*squashfs*' -exec 7z a -t7z -p'${{secrets.ENCRYPTED_PASSWD}}' -mhe=on -mx=9 -mmt=on -aoa jdc-ax1800.7z {} \;
           find . -type f -name '*bin*' -exec rm -rf {} \;
