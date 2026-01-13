@@ -33,103 +33,51 @@ env:
   UPLOAD_RELEASE: false
   TZ: Asia/Shanghai
   INIT_CUSTOM_CONFIG: true
+  CACHE_TOOLCHAIN: true
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      DEBIAN_FRONTEND: noninteractive
 
     steps:
-      - name: Check Server Performance
+      - name: Setup variables
         run: |
-          echo "警告⚠"
-          echo "分配的服务器性能有限，若选择的插件过多，务必注意CPU性能！"
-          echo -e "已知CPU型号(降序): 7763，8370C，8272CL，8171M，E5-2673\n"
-          echo "--------------------------CPU信息--------------------------"
-          echo "CPU物理数量: $(cat /proc/cpuinfo | grep "physical id" | sort | uniq | wc -l)"
-          echo "CPU核心数量: $(nproc)"
-          echo -e "CPU型号信息:$(cat /proc/cpuinfo | grep -m1 name | awk -F: '{print $2}')\n"
-          echo "--------------------------内存信息--------------------------"
-          echo "已安装内存详细信息:"
-          echo -e "$(sudo lshw -short -C memory | grep GiB)\n"
-          echo "--------------------------硬盘信息--------------------------"
-          echo "硬盘数量: $(ls /dev/sd* | grep -v [1-9] | wc -l)" && df -hT
+          sudo cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+          sudo timedatectl set-timezone "$TZ"
 
-      - name: Before freeing up disk space
+      - name: Show system
         run: |
-          echo "Before freeing up disk space"
-          echo "=============================================================================="
-          df -hT
-          echo "=============================================================================="
+          echo -e "\n\e[1;32mCPU:\e[0m"
+          echo "$(grep 'model name' /proc/cpuinfo | head -1 | awk -F ': ' '{print $2}') ($(grep 'cpu MHz' /proc/cpuinfo | head -1 | awk -F ': ' '{print $2}')MHz) x $(grep processor /proc/cpuinfo  | wc -l)"
+          echo -e "\n\e[1;32mMemory:\e[0m"
+          free -h
+          echo -e "\n\e[1;32mStorage:\e[0m"
+          df -Th / /mnt
+          echo -e "\n\e[1;32mSystem:\e[0m"
+          lsb_release -a
+          echo -e "\n\e[1;32mKernel:\e[0m"
+          uname -a
+          echo
 
-      - name: "Optimize Disk Space"
-        uses: hugoalh/disk-space-optimizer-ghaction@v0.8.1
-        with:
-          operate_sudo: "True"
-          general_include: ".+"
-          general_exclude: |-
-            ^GCC$
-            ^G\+\+$
-            Clang
-            LLVM
-          docker_include: ".+"
-          docker_prune: "True"
-          docker_clean: "True"
-          apt_prune: "True"
-          apt_clean: "True"
-          homebrew_prune: "True"
-          homebrew_clean: "True"
-          npm_prune: "True"
-          npm_clean: "True"
-          os_swap: "True"
-
-      - name: Freeing up disk space
-        uses: easimon/maximize-build-space@master
-        with:
-          root-reserve-mb: 3072
-          swap-size-mb: 1
-          remove-dotnet: 'true'
-          remove-android: 'true'
-          remove-haskell: 'true'
-          remove-codeql: 'true'
-          remove-docker-images: 'true'
-
-      - name: Free up disk space complete
-        run: |
-          echo "Free up disk space complete"
-          echo "=============================================================================="
-          df -hT
-          echo "=============================================================================="
-
-      - name: Checkout
-        uses: actions/checkout@main
+      - name: Free disk space
+        uses: sbwml/actions@free-disk
 
       - name: Build System Setup
         uses: sbwml/actions@openwrt-build-setup
 
-      - name: Initialization environment
-        env:
-          DEBIAN_FRONTEND: noninteractive
-        run: |
-          sudo cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
-          sudo timedatectl set-timezone "$TZ"
-          sudo mkdir -p /workdir
-          sudo chown $USER:$GROUPS /workdir
+      - name: Install LLVM
+        uses: sbwml/actions@install-llvm
+
+      - name: Checkout
+        uses: actions/checkout@main
 
       - name: Clone source code
-        working-directory: /workdir
         run: |
           df -hT $PWD
           git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
-          ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
           cd openwrt
           echo "OPENWRT_PATH=$PWD" >> $GITHUB_ENV
-          COMMIT_AUTHOR=$(git show -s --date=short --format="作者: %an")
-          echo "COMMIT_AUTHOR=$COMMIT_AUTHOR" >> $GITHUB_ENV
-          COMMIT_DATE=$(git show -s --date=short --format="时间: %ci")
-          echo "COMMIT_DATE=$COMMIT_DATE" >> $GITHUB_ENV
-          COMMIT_MESSAGE=$(git show -s --date=short --format="内容: %s")
-          echo "COMMIT_MESSAGE=$COMMIT_MESSAGE" >> $GITHUB_ENV
-          COMMIT_HASH=$(git show -s --date=short --format="hash: %H")
-          echo "COMMIT_HASH=$COMMIT_HASH" >> $GITHUB_ENV
 
       - name: Generate Variables
         run: |
@@ -192,11 +140,11 @@ jobs:
       - name: Init custom config
         if: env.INIT_CUSTOM_CONFIG == 'true'
         run: |
-          git clone --depth 1 -b jdc_ax1800 --single-branch ${{secrets.PULL_SETTING_REPO_URL}} /workdir/config
-          cd /workdir/config
-          mkdir -p /workdir/openwrt/files
-          mv etc /workdir/openwrt/files/
-          mv root /workdir/openwrt/files/
+          git clone --depth 1 -b jdc_ax1800 --single-branch ${{secrets.PULL_SETTING_REPO_URL}} $GITHUB_WORKSPACE/config
+          cd $GITHUB_WORKSPACE/config
+          mkdir -p $GITHUB_WORKSPACE/openwrt/files
+          mv etc $GITHUB_WORKSPACE/openwrt/files/
+          mv root $GITHUB_WORKSPACE/openwrt/files/
 
       - name: Compile the firmware
         id: compile
@@ -225,7 +173,7 @@ jobs:
         if: env.UPLOAD_FIRMWARE == 'true' && !cancelled()
         run: |
           cd openwrt/bin/targets/*/*
-          cp /workdir/openwrt/.config ./build_config.txt
+          cp $GITHUB_WORKSPACE/openwrt/.config ./build_config.txt
           rm -rf packages
           find . -type f -name '*squashfs*' -exec 7z a -t7z -p'${{secrets.ENCRYPTED_PASSWD}}' -mhe=on -mx=9 -mmt=on -aoa jdc-ax1800.7z {} \;
           find . -type f -name '*bin*' -exec rm -rf {} \;
