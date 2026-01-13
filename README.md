@@ -1,36 +1,52 @@
-## `openwrt`/`lede` `git actions`云编译项目
-### 感谢P3TERX开源源代码所做的贡献，感谢所有被引用的开源项目的作者。
+# ☁️ OpenWrt / LEDE Git Actions Cloud Build
 
-## 本项目私有化改造的东西比较多,可做参考,无法直接用,下载下来的压缩包是带有密码的。
-- 各版本介绍如下
-> x86_64版本用做主路由,~~默认会编译`fullcone_nat`模块,不需要的要在yml文件修改`ADD_FULLCONE`为`false`~~,使用的是原版[openwrt](https://github.com/openwrt/openwrt)源码,个人喜欢追新,原版的功能和应用都是用的新的.      
-> K2P版本是用来挂`wireguard`的,采用的是[LEDE](https://github.com/coolsnowwolf/lede)的源码,之前有考虑并尝试过原版[openwrt](https://github.com/openwrt/openwrt)源码的,后面发现原版源码的开源无线驱动没有LEDE的鸡血无线驱动强,因此换成了LEDE的源码.   
-> Sidecar用于旁路由，挂梯子，精简了比较多的模块，比如PPP拨号模块等等,源码同样用的原版[openwrt](https://github.com/openwrt/openwrt)源码。  
-> N1跟Sidecar的功能差不多,不过打包使用的是LEDE的源码,主要我是用N1来做无线桥接的,需要用无线来桥接其它网络,用原版openwrt源码发现WIFI不稳,老是断联,因此才换成LEDE的源码,无线桥接算是稳定了,~~后期再尝试原版源码了~~。
+> [!NOTE]
+> 感谢 **P3TERX** 对开源代码的贡献，同时感谢所有被引用的开源项目的作者。
+
+## ⚠️ 重要说明
+
+> [!CAUTION]
+> **本项目包含较多私有化改造内容，下载的压缩包已加密。**
+> 
+> 下方配置仅供参考，**无法直接使用**。
+
+## 📦 版本介绍
+
+| 版本 | 适用场景 | 源码来源 | 特性 / 备注 |
+| :--- | :--- | :--- | :--- |
+| **x86_64** | 主路由 | [OpenWrt](https://github.com/openwrt/openwrt) | • 个人追新专用，使用原版源码。<br>• ~~默认编译 `fullcone_nat`（如不需要，请在 yml 中将 `ADD_FULLCONE` 设为 `false`）。~~ |
+| **K2P** | 挂 WireGuard | [LEDE](https://github.com/coolsnowwolf/lede) | • 曾尝试原版 OpenWrt，但无线驱动表现不如 LEDE 强劲（鸡血驱动），故选用 LEDE。 |
+| **Sidecar** | 旁路由 / 梯子 | [OpenWrt](https://github.com/openwrt/openwrt) | • 精简了 PPP 拨号等模块，专用于旁路由场景。 |
+| **N1** | 无线桥接 | [LEDE](https://github.com/coolsnowwolf/lede) | • 功能类似 Sidecar。<br>• 原版 OpenWrt WiFi 易断流，LEDE 版本无线桥接更稳定。 |
+
+## 🛠️ 改动与配置
+
+### 核心修改
+- **🔐 输出文件加密**: 默认对输出文件进行加密。此功能无开关，**必须**自行添加 Secrets 变量 `ENCRYPTED_PASSWD`。
+- **🚫 Failsafe**: 默认**关闭** `failsafe` 模式。
+- **⚙️ 快速编译**: 将 `INIT_CUSTOM_CONFIG` 设置为 `false` 可跳过自定义配置，直接进行编译。
+
+### 自定义配置
+如果需要自定义配置，请遵循以下步骤：
+
+1. **设置 Secrets**: 配置 `PULL_SETTING_REPO_URL` 和 `PULL_SETTING_REPO_KEY`。
+2. **建立目录结构**:
+   确保配置仓库的目录结构如下图所示：
    
+   ![目录结构](/img/目录结构.png "目录结构")
 
-### 改动如下：
-- 对输出文件默认进行加密,没有配置开关,需自行添加一个secrets,变量名为`ENCRYPTED_PASSWD`.
-- 默认关闭了`failsafe` 模式
-- 不需要自定义配置就把 `INIT_CUSTOM_CONFIG` 改为 `false`，这样就可以直接编译了。
-- 如果自定义配置，需要配置`PULL_SETTING_REPO_URL`和 `PULL_SETTING_REPO_KEY`两个secrets，并且目录结构要如图：       
-   
-  ![目录](/img/目录结构.png "目录结构")
-     
-- 自定义配置建议控制台强制使用账号密码登录，以防配置信息泄露。
-- 上图`uci-defaults`文件可以自定义，如：
-  > WIFI 名称及密码  
-  > PPPOE账号密码    
-  > ROOT账号密码   
-  > 防火墙规则  
-  > 系统设置   
-  > 等等。。。  
+3. **安全建议**: 建议在控制台强制启用账号密码登录，防止配置信息泄露。
 
-### 提供一个`uci-defaults`的模板,上图中的`99-custom`就是按照此模板修改而来的。
-```text
+---
+
+### 📝 `uci-defaults` 模板
+上图提及的 `99-custom` 文件是基于以下模板修改而来，可用于预设 WiFi、PPPoE、Root 密码及防火墙规则等：
+
+```bash
 # Beware! This script will be in /rom/etc/uci-defaults/ as part of the image.
 # Uncomment lines to apply:
-#
+
+# --- Variables ---
 # wlan_name="OpenWrt"
 # wlan_password="12345678"
 #
@@ -43,18 +59,19 @@
 # log potential errors
 exec >/tmp/setup.log 2>&1
 
+# 1. Set Root Password
 if [ -n "$root_password" ]; then
   (echo "$root_password"; sleep 1; echo "$root_password") | passwd > /dev/null
 fi
 
-# Configure LAN
+# 2. Configure LAN
 # More options: https://openwrt.org/docs/guide-user/base-system/basic-networking
 if [ -n "$lan_ip_address" ]; then
   uci set network.lan.ipaddr="$lan_ip_address"
   uci commit network
 fi
 
-# Configure WLAN
+# 3. Configure WLAN
 # More options: https://openwrt.org/docs/guide-user/network/wifi/basic#wi-fi_interfaces
 if [ -n "$wlan_name" -a -n "$wlan_password" -a ${#wlan_password} -ge 8 ]; then
   uci set wireless.@wifi-device[0].disabled='0'
@@ -64,7 +81,7 @@ if [ -n "$wlan_name" -a -n "$wlan_password" -a ${#wlan_password} -ge 8 ]; then
   uci commit wireless
 fi
 
-# Configure PPPoE
+# 4. Configure PPPoE
 # More options: https://openwrt.org/docs/guide-user/network/wan/wan_interface_protocols#protocol_pppoe_ppp_over_ethernet
 if [ -n "$pppoe_username" -a "$pppoe_password" ]; then
   uci set network.wan.proto=pppoe
@@ -74,6 +91,4 @@ if [ -n "$pppoe_username" -a "$pppoe_password" ]; then
 fi
 
 echo "All done!"
-
 ```
-
