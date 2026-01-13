@@ -1,0 +1,216 @@
+#
+# Copyright (c) 2019-2020 P3TERX
+# MIT License
+#
+# Build OpenWrt using GitHub Actions
+#
+
+name: JDC AX1800 NO WIFI CACHE
+
+on:
+  push:
+    paths:
+      - 'jdc_ax1800_nowifi/.config'
+      - 'jdc_ax1800_nowifi/diy-part1.sh'
+      - 'jdc_ax1800_nowifi/diy-part2.sh'
+  workflow_dispatch:
+  schedule:
+    # UTC 16:00 = 北京时间 24:00
+    - cron: '0 16 * * *'
+
+env:
+  REPO_URL: https://github.com/LiBwrt/openwrt-6.x.git
+  REPO_BRANCH: main-nss
+  FEEDS_CONF: jdc_ax1800_nowifi/feeds.conf.default
+  CONFIG_FILE: jdc_ax1800_nowifi/.config
+  DIY_P1_SH: jdc_ax1800_nowifi/diy-part1.sh
+  DIY_P2_SH: jdc_ax1800_nowifi/diy-part2.sh
+
+  UPLOAD_BIN_DIR: false
+  UPLOAD_FIRMWARE: true
+  UPLOAD_RELEASE: false
+
+  INIT_CUSTOM_CONFIG: true
+  CACHE_TOOLCHAIN: true
+
+  TZ: Asia/Shanghai
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      DEBIAN_FRONTEND: noninteractive
+
+    steps:
+      - name: Setup timezone
+        run: |
+          sudo cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+          sudo timedatectl set-timezone "$TZ"
+
+      - name: Show system info
+        run: |
+          echo "CPU:"
+          grep 'model name' /proc/cpuinfo | head -1
+          echo
+          echo "Memory:"
+          free -h
+          echo
+          echo "Disk:"
+          df -hT
+          echo
+          uname -a
+
+      - name: Free disk space
+        uses: sbwml/actions@free-disk
+
+      - name: Build system setup
+        uses: sbwml/actions@openwrt-build-setup
+
+      - name: Install LLVM
+        uses: sbwml/actions@install-llvm
+
+      - name: Checkout workflow repo
+        uses: actions/checkout@v4
+
+      - name: Clone OpenWrt source
+        run: |
+          git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
+          echo "OPENWRT_PATH=$PWD/openwrt" >> $GITHUB_ENV
+
+      - name: Generate variables
+        run: |
+          cd openwrt
+          make defconfig > /dev/null 2>&1
+          SOURCE_REPO="$(echo $REPO_URL | awk -F '/' '{print $(NF)}')"
+          echo "SOURCE_REPO=$SOURCE_REPO" >> $GITHUB_ENV
+          DEVICE_TARGET=$(grep CONFIG_TARGET_BOARD .config | awk -F '"' '{print $2}')
+          echo "DEVICE_TARGET=$DEVICE_TARGET" >> $GITHUB_ENV
+          DEVICE_SUBTARGET=$(grep CONFIG_TARGET_SUBTARGET .config | awk -F '"' '{print $2}')
+          echo "DEVICE_SUBTARGET=$DEVICE_SUBTARGET" >> $GITHUB_ENV
+
+      # ===== Toolchain cache (精准) =====
+      - name: Cache OpenWrt Toolchain
+        if: env.CACHE_TOOLCHAIN == 'true'
+        uses: actions/cache@v4
+        with:
+          path: |
+            openwrt/build_dir/toolchain-*
+            openwrt/build_dir/host/*
+            openwrt/staging_dir/toolchain-*
+          key: >
+            toolchain-
+            ${{ env.SOURCE_REPO }}-
+            ${{ env.REPO_BRANCH }}-
+            ${{ env.DEVICE_TARGET }}-
+            ${{ env.DEVICE_SUBTARGET }}-
+            ${{ hashFiles('openwrt/include/toolchain.mk') }}-
+            ${{ hashFiles('openwrt/.config') }}
+
+      # ===== feeds cache =====
+      - name: Cache OpenWrt feeds
+        uses: actions/cache@v4
+        with:
+          path: |
+            openwrt/feeds
+            openwrt/feeds.conf
+            openwrt/feeds.conf.default
+          key: >
+            feeds-
+            ${{ env.SOURCE_REPO }}-
+            ${{ env.REPO_BRANCH }}-
+            ${{ hashFiles('openwrt/feeds.conf.default') }}
+
+      # ===== dl cache =====
+      - name: Cache OpenWrt dl
+        uses: actions/cache@v4
+        with:
+          path: openwrt/dl
+          key: dl-${{ env.SOURCE_REPO }}-${{ env.REPO_BRANCH }}
+
+      - name: Load custom feeds
+        run: |
+          [ -e $FEEDS_CONF ] && mv $FEEDS_CONF openwrt/feeds.conf.default
+          chmod +x $DIY_P1_SH
+          cd openwrt
+          $GITHUB_WORKSPACE/$DIY_P1_SH
+
+      - name: Update feeds
+        run: cd openwrt && ./scripts/feeds update -a
+
+      - name: Install feeds
+        run: cd openwrt && ./scripts/feeds install -a
+
+      - name: Load custom configuration
+        run: |
+          [ -e files ] && mv files openwrt/files
+          [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
+          chmod +x $DIY_P2_SH
+          cd openwrt
+          $GITHUB_WORKSPACE/$DIY_P2_SH
+
+      - name: Download packages
+        run: |
+          cd openwrt
+          make download -j8 || make download -j1 V=s
+          find dl -size -1024c -exec rm -f {} \;
+
+      - name: Install SSH Key
+        if: env.INIT_CUSTOM_CONFIG == 'true'
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.PULL_SETTING_REPO_KEY }}
+          known_hosts: unnecessary
+
+      - name: Init custom config
+        if: env.INIT_CUSTOM_CONFIG == 'true'
+        run: |
+          git clone --depth 1 -b jdc_ax1800 --single-branch \
+            ${{ secrets.PULL_SETTING_REPO_URL }} $GITHUB_WORKSPACE/config
+          mkdir -p openwrt/files
+          mv $GITHUB_WORKSPACE/config/etc openwrt/files/
+          mv $GITHUB_WORKSPACE/config/root openwrt/files/
+
+      # ===== Compile with auto toolchain rebuild =====
+      - name: Compile firmware
+        id: compile
+        run: |
+          cd openwrt
+          make -j$(( $(nproc) + 1 )) || (
+            echo "⚠️ build failed, rebuild toolchain"
+            rm -rf build_dir/toolchain-* staging_dir/toolchain-*
+            make toolchain/install -j$(( $(nproc) + 1 ))
+            make -j$(( $(nproc) + 1 ))
+          ) || make -j1 V=s
+          echo "status=success" >> $GITHUB_OUTPUT
+
+      - name: Organize firmware
+        if: steps.compile.outputs.status == 'success'
+        env:
+          PASSWD: ${{ secrets.ENCRYPTED_PASSWD }}
+        run: |
+          cd openwrt/bin/targets/*/*
+          cp $GITHUB_WORKSPACE/openwrt/.config build_config.txt
+          rm -rf packages
+          7z a -t7z -p"$PASSWD" -mhe=on -mx=9 jdc-ax1800.7z *squashfs*
+          find . -type f ! -name '*.7z' -delete
+          echo "FIRMWARE=$PWD" >> $GITHUB_ENV
+
+      - name: Upload firmware
+        if: steps.compile.outputs.status == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: OpenWrt_firmware
+          path: ${{ env.FIRMWARE }}
+
+      # ===== 定时瘦身 dl =====
+      - name: Cleanup old dl files
+        if: github.event_name == 'schedule'
+        run: |
+          cd openwrt
+          find dl -type f -mtime +30 -delete
+
+      - name: Delete old workflow runs
+        uses: Mattraks/delete-workflow-runs@main
+        with:
+          retain_days: 7
+          keep_minimum_runs: 7
