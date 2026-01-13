@@ -172,14 +172,14 @@ jobs:
 
       - name: Organize files
         id: organize
-        if: env.UPLOAD_FIRMWARE == 'true' && !cancelled()
+        if: steps.compile.outputs.status == 'success'
         env:
           PASSWD: ${{ secrets.ENCRYPTED_PASSWD }}
         run: |
           cd openwrt/bin/targets/*/*
           cp $GITHUB_WORKSPACE/openwrt/.config ./build_config.txt
           rm -rf packages
-          find . -type f -name '*squashfs*' -exec 7z a -t7z -p "$PASSWD" -mhe=on -mx=9 -mmt=on -aoa jdc-ax1800.7z {} \;
+          find . -type f -name '*squashfs*' -exec 7z a -t7z -p"$PASSWD" -mhe=on -mx=9 -mmt=on -aoa jdc-ax1800.7z {} \;
           find . -type f -name '*bin*' -exec rm -rf {} \;
           find . -type f -name '*itb*' -exec rm -rf {} \;
           echo "FIRMWARE=$PWD" >> $GITHUB_ENV

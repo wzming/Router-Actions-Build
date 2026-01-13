@@ -81,51 +81,39 @@ jobs:
         run: |
           SOURCE_REPO="$(basename $REPO_URL .git)"
           echo "SOURCE_REPO=$SOURCE_REPO" >> $GITHUB_ENV
-          
+
           DEVICE_TARGET=$(grep '^CONFIG_TARGET_BOARD=' $CONFIG_FILE | cut -d'"' -f2)
           DEVICE_SUBTARGET=$(grep '^CONFIG_TARGET_SUBTARGET=' $CONFIG_FILE | cut -d'"' -f2)
-          
+
           echo "DEVICE_TARGET=$DEVICE_TARGET" >> $GITHUB_ENV
           echo "DEVICE_SUBTARGET=$DEVICE_SUBTARGET" >> $GITHUB_ENV
-          
+
           echo "Using config file target: $DEVICE_TARGET / $DEVICE_SUBTARGET"
 
-
-      # ===== Toolchain cache (精准) =====
+      # ===== Toolchain cache =====
       - name: Cache OpenWrt Toolchain
         if: env.CACHE_TOOLCHAIN == 'true'
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             openwrt/build_dir/toolchain-*
             openwrt/build_dir/host/*
             openwrt/staging_dir/toolchain-*
-          key: >
-            toolchain-
-            ${{ env.SOURCE_REPO }}-
-            ${{ env.REPO_BRANCH }}-
-            ${{ env.DEVICE_TARGET }}-
-            ${{ env.DEVICE_SUBTARGET }}-
-            ${{ hashFiles('openwrt/include/toolchain.mk') }}-
-            ${{ hashFiles('openwrt/.config') }}
+          key: toolchain-${{ env.SOURCE_REPO }}-${{ env.REPO_BRANCH }}-${{ env.DEVICE_TARGET }}-${{ env.DEVICE_SUBTARGET }}-${{ hashFiles('openwrt/include/toolchain.mk') }}-${{ hashFiles('openwrt/.config') }}
 
       # ===== feeds cache =====
       - name: Cache OpenWrt feeds
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             openwrt/feeds
             openwrt/feeds.conf
             openwrt/feeds.conf.default
-          key: >
-            feeds-
-            ${{ env.SOURCE_REPO }}-
-            ${{ env.REPO_BRANCH }}-
-            ${{ hashFiles('openwrt/feeds.conf.default') }}
+          key: feeds-${{ env.SOURCE_REPO }}-${{ env.REPO_BRANCH }}-${{ github.run_id }}
 
       # ===== dl cache =====
       - name: Cache OpenWrt dl
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: openwrt/dl
           key: dl-${{ env.SOURCE_REPO }}-${{ env.REPO_BRANCH }}
@@ -155,7 +143,7 @@ jobs:
         run: |
           cd openwrt
           make download -j8 || make download -j1 V=s
-          find dl -size -1024c -exec rm -f {} \;
+          find dl -size -1024c -delete
 
       - name: Install SSH Key
         if: env.INIT_CUSTOM_CONFIG == 'true'
@@ -173,7 +161,7 @@ jobs:
           mv $GITHUB_WORKSPACE/config/etc openwrt/files/
           mv $GITHUB_WORKSPACE/config/root openwrt/files/
 
-      # ===== Compile with auto toolchain rebuild =====
+      # ===== Compile =====
       - name: Compile firmware
         id: compile
         run: |
@@ -194,8 +182,9 @@ jobs:
           cd openwrt/bin/targets/*/*
           cp $GITHUB_WORKSPACE/openwrt/.config build_config.txt
           rm -rf packages
-          7z a -t7z -p"$PASSWD" -mhe=on -mx=9 jdc-ax1800.7z *squashfs*
-          find . -type f ! -name '*.7z' -delete
+          find . -type f -name '*squashfs*' -exec 7z a -t7z -p"$PASSWD" -mhe=on -mx=9 -mmt=on -aoa jdc-ax1800.7z {} \;
+          find . -type f -name '*bin*' -exec rm -rf {} \;
+          find . -type f -name '*itb*' -exec rm -rf {} \;
           echo "FIRMWARE=$PWD" >> $GITHUB_ENV
 
       - name: Upload firmware
@@ -205,7 +194,7 @@ jobs:
           name: OpenWrt_firmware
           path: ${{ env.FIRMWARE }}
 
-      # ===== 定时瘦身 dl =====
+      # ===== 定时 dl 瘦身 =====
       - name: Cleanup old dl files
         if: github.event_name == 'schedule'
         run: |
