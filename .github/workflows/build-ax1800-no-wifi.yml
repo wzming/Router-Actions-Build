@@ -81,14 +81,16 @@ jobs:
 
       - name: Generate Variables
         run: |
-          cd $OPENWRT_PATH
-          make defconfig > /dev/null 2>&1
-          SOURCE_REPO="$(echo $REPO_URL | awk -F '/' '{print $(NF)}')"
+          SOURCE_REPO="$(basename $REPO_URL .git)"
           echo "SOURCE_REPO=$SOURCE_REPO" >> $GITHUB_ENV
-          DEVICE_TARGET=$(cat .config | grep CONFIG_TARGET_BOARD | awk -F '"' '{print $2}')
+          
+          DEVICE_TARGET=$(grep '^CONFIG_TARGET_BOARD=' $CONFIG_FILE | cut -d'"' -f2)
+          DEVICE_SUBTARGET=$(grep '^CONFIG_TARGET_SUBTARGET=' $CONFIG_FILE | cut -d'"' -f2)
+          
           echo "DEVICE_TARGET=$DEVICE_TARGET" >> $GITHUB_ENV
-          DEVICE_SUBTARGET=$(cat .config | grep CONFIG_TARGET_SUBTARGET | awk -F '"' '{print $2}')
           echo "DEVICE_SUBTARGET=$DEVICE_SUBTARGET" >> $GITHUB_ENV
+          
+          echo "Using config file target: $DEVICE_TARGET / $DEVICE_SUBTARGET"
 
       - name: Cache Toolchain
         if: env.CACHE_TOOLCHAIN == 'true'
