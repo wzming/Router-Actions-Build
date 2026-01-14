@@ -5,7 +5,7 @@
 # Build OpenWrt using GitHub Actions
 #
 
-name: JDC AX1800 NO WIFI (NO CACHE)
+name: JDC AX1800 NO WIFI CACHE
 
 on:
   push:
@@ -15,6 +15,7 @@ on:
       - 'jdc_ax1800_nowifi/diy-part2.sh'
   workflow_dispatch:
   schedule:
+    # UTC 16:00 = 北京时间 24:00
     - cron: '0 16 * * *'
 
 env:
@@ -30,6 +31,8 @@ env:
   UPLOAD_RELEASE: false
 
   INIT_CUSTOM_CONFIG: true
+  CACHE_TOOLCHAIN: true
+
   TZ: Asia/Shanghai
 
 jobs:
@@ -54,6 +57,7 @@ jobs:
           echo
           echo "Disk:"
           df -hT
+          echo
           uname -a
 
       - name: Free disk space
@@ -84,7 +88,35 @@ jobs:
           echo "DEVICE_TARGET=$DEVICE_TARGET" >> $GITHUB_ENV
           echo "DEVICE_SUBTARGET=$DEVICE_SUBTARGET" >> $GITHUB_ENV
 
-          echo "Using config: $DEVICE_TARGET / $DEVICE_SUBTARGET"
+          echo "Using config file target: $DEVICE_TARGET / $DEVICE_SUBTARGET"
+
+      # ===== Toolchain cache =====
+      - name: Cache OpenWrt Toolchain
+        if: env.CACHE_TOOLCHAIN == 'true'
+        uses: actions/cache@v5
+        with:
+          path: |
+            openwrt/build_dir/toolchain-*
+            openwrt/build_dir/host/*
+            openwrt/staging_dir/toolchain-*
+          key: toolchain-${{ env.SOURCE_REPO }}-${{ env.REPO_BRANCH }}-${{ env.DEVICE_TARGET }}-${{ env.DEVICE_SUBTARGET }}-${{ hashFiles('openwrt/include/toolchain.mk') }}-${{ hashFiles('openwrt/.config') }}
+
+      # ===== feeds cache =====
+      - name: Cache OpenWrt feeds
+        uses: actions/cache@v5
+        with:
+          path: |
+            openwrt/feeds
+            openwrt/feeds.conf
+            openwrt/feeds.conf.default
+          key: feeds-${{ env.SOURCE_REPO }}-${{ env.REPO_BRANCH }}-${{ github.run_id }}
+
+      # ===== dl cache =====
+      - name: Cache OpenWrt dl
+        uses: actions/cache@v5
+        with:
+          path: openwrt/dl
+          key: dl-${{ env.SOURCE_REPO }}-${{ env.REPO_BRANCH }}
 
       - name: Load custom feeds
         run: |
@@ -111,7 +143,7 @@ jobs:
         run: |
           cd openwrt
           make download -j8 || make download -j1 V=s
-          find dl -type f -size -1024c -delete
+          find dl -size -1024c -delete
 
       - name: Install SSH Key
         if: env.INIT_CUSTOM_CONFIG == 'true'
@@ -129,11 +161,17 @@ jobs:
           mv $GITHUB_WORKSPACE/config/etc openwrt/files/
           mv $GITHUB_WORKSPACE/config/root openwrt/files/
 
+      # ===== Compile =====
       - name: Compile firmware
         id: compile
         run: |
           cd openwrt
-          make -j$(( $(nproc) + 1 )) || make -j1 V=s
+          make -j$(( $(nproc) + 1 )) || (
+            echo "⚠️ build failed, rebuild toolchain"
+            rm -rf build_dir/toolchain-* staging_dir/toolchain-*
+            make toolchain/install -j$(( $(nproc) + 1 ))
+            make -j$(( $(nproc) + 1 ))
+          ) || make -j1 V=s
           echo "status=success" >> $GITHUB_OUTPUT
 
       - name: Organize firmware
@@ -144,8 +182,9 @@ jobs:
           cd openwrt/bin/targets/*/*
           cp $GITHUB_WORKSPACE/openwrt/.config build_config.txt
           rm -rf packages
-          7z a -t7z -p"$PASSWD" -mhe=on -mx=9 jdc-ax1800.7z *squashfs*
-          find . -type f ! -name '*.7z' -delete
+          find . -type f -name '*squashfs*' -exec 7z a -t7z -p"$PASSWD" -mhe=on -mx=9 -mmt=on -aoa jdc-ax1800.7z {} \;
+          find . -type f -name '*bin*' -exec rm -rf {} \;
+          find . -type f -name '*itb*' -exec rm -rf {} \;
           echo "FIRMWARE=$PWD" >> $GITHUB_ENV
 
       - name: Upload firmware
@@ -154,6 +193,13 @@ jobs:
         with:
           name: OpenWrt_firmware
           path: ${{ env.FIRMWARE }}
+
+      # ===== 定时 dl 瘦身 =====
+      - name: Cleanup old dl files
+        if: github.event_name == 'schedule'
+        run: |
+          cd openwrt
+          find dl -type f -mtime +30 -delete
 
       - name: Delete old workflow runs
         uses: Mattraks/delete-workflow-runs@main
