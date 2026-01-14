@@ -33,7 +33,6 @@ env:
   UPLOAD_RELEASE: false
   TZ: Asia/Shanghai
   INIT_CUSTOM_CONFIG: true
-  CACHE_TOOLCHAIN: true
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -65,9 +64,6 @@ jobs:
 
       - name: Build System Setup
         uses: sbwml/actions@openwrt-build-setup
-
-      - name: Install LLVM
-        uses: sbwml/actions@install-llvm
 
       - name: Checkout
         uses: actions/checkout@main
