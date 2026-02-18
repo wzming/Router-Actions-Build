@@ -13,10 +13,10 @@ name: Build OpenWrt Main SNAPSHOT
 on:
   push:
     paths:
-      - 'branch_main/.config'
-      - 'branch_main/config.sh'
-      - 'branch_main/diy-part1.sh'
-      - 'branch_main/diy-part2.sh'
+      - '../../../branch_main/.config'
+      - '../../../branch_main/config.sh'
+      - '../../../branch_main/diy-part1.sh'
+      - '../../../branch_main/diy-part2.sh'
   workflow_dispatch:
   schedule:
     #UTC时间，比北京时间慢8个小时

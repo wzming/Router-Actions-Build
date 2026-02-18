@@ -1,6 +1,8 @@
 #!/bin/bash
-git clone --depth 1 -b ax6000 --single-branch $1 /workdir/config
-cd /workdir/config
-mkdir -p /workdir/openwrt/files
-mv etc /workdir/openwrt/files/
-mv root /workdir/openwrt/files/
+
+cd $GITHUB_WORKSPACE
+
+git clone --depth 1 -b ax6000 --single-branch $1 config
+cd $GITHUB_WORKSPACE/config
+mkdir -p $GITHUB_WORKSPACE/openwrt/files
+mv etc $GITHUB_WORKSPACE/openwrt/files/

@@ -10,9 +10,9 @@ name: JDC AX1800 NO WIFI (NO CACHE)
 on:
   push:
     paths:
-      - 'jdc_ax1800_nowifi/.config'
-      - 'jdc_ax1800_nowifi/diy-part1.sh'
-      - 'jdc_ax1800_nowifi/diy-part2.sh'
+      - '../../../jdc_ax1800_nowifi/.config'
+      - '../../../jdc_ax1800_nowifi/diy-part1.sh'
+      - '../../../jdc_ax1800_nowifi/diy-part2.sh'
   workflow_dispatch:
   schedule:
     - cron: '0 16 * * *'
