@@ -24,7 +24,7 @@ on:
 
 env:
   REPO_URL: https://github.com/immortalwrt/immortalwrt.git
-  REPO_BRANCH: openwrt-25.12
+  REPO_BRANCH: master
   FEEDS_CONF: ax6000/feeds.conf.default
   CONFIG_FILE: ax6000/.config
   DIY_P1_SH: ax6000/diy-part1.sh
