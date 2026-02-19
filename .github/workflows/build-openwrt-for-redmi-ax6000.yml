@@ -133,11 +133,8 @@ jobs:
       - name: Init custom config
         if: env.INIT_CUSTOM_CONFIG == 'true'
         run: |
-          git clone --depth 1 -b jdc_ax1800 --single-branch ${{secrets.PULL_SETTING_REPO_URL}} $GITHUB_WORKSPACE/config
-          cd $GITHUB_WORKSPACE/config
-          mkdir -p $GITHUB_WORKSPACE/openwrt/files
-          mv etc $GITHUB_WORKSPACE/openwrt/files/
-          mv root $GITHUB_WORKSPACE/openwrt/files/
+          chmod +x $CONFIG_SH
+          $GITHUB_WORKSPACE/$CONFIG_SH ${{secrets.PULL_SETTING_REPO_URL}}
 
       - name: Compile the firmware
         id: compile
